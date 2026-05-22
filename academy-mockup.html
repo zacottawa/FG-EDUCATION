@@ -1,0 +1,1961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FirstGold™ Academy</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0f0f0f; --surface: #1a1a1a; --surface2: #222222; --border: #2a2a2a;
+    --gold: #C9A84C; --gold-dim: #8a7234; --bronze: #CD7F32;
+    --silver: #A8A9AD; --platinum: #D0CED0;
+    --text: #f0f0f0; --text-dim: #888888; --text-mid: #bbbbbb;
+    --green: #3ecf8e; --red: #f87171;
+  }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 15px; line-height: 1.6; }
+
+  /* ── NAV ── */
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 0 48px; height: 64px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(15,15,15,0.96); backdrop-filter: blur(8px); z-index: 100; }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; cursor: pointer; }
+  .logo-mark { width: 28px; height: 28px; background: var(--gold); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; color: #000; }
+  .logo-text { font-size: 17px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+  .logo-text span { color: var(--gold); }
+  .nav-badge { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--gold); text-transform: uppercase; border: 1px solid var(--gold-dim); padding: 2px 8px; border-radius: 4px; margin-left: 4px; }
+  .nav-right { display: flex; align-items: center; gap: 24px; }
+  .nav-link { color: var(--text-dim); text-decoration: none; font-size: 14px; }
+  .nav-points { background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px; font-size: 13px; color: var(--gold); font-weight: 600; }
+  .nav-avatar { width: 32px; height: 32px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; color: #000; }
+
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ── BREADCRUMB ── */
+  .breadcrumb { padding: 16px 48px; display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-dim); }
+  .breadcrumb a { color: var(--text-dim); text-decoration: none; cursor: pointer; }
+  .breadcrumb a:hover { color: var(--text); }
+  .breadcrumb .sep { color: var(--border); }
+  .breadcrumb .current { color: var(--text); }
+
+  /* ══════════════════════════════
+     HOME
+  ══════════════════════════════ */
+  .hero { padding: 72px 48px 56px; max-width: 900px; }
+  .hero-eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+  .hero h1 { font-size: 44px; font-weight: 800; line-height: 1.1; letter-spacing: -1px; margin-bottom: 20px; }
+  .hero h1 em { color: var(--gold); font-style: normal; }
+  .hero p { font-size: 17px; color: var(--text-mid); max-width: 560px; line-height: 1.7; }
+
+  .progress-strip { display: flex; margin: 0 48px 56px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--surface); }
+  .progress-seg { flex: 1; padding: 20px 24px; border-right: 1px solid var(--border); }
+  .progress-seg:last-child { border-right: none; }
+  .progress-seg.done { background: rgba(201,168,76,0.04); }
+  .seg-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+  .seg-label.bronze { color: var(--bronze); } .seg-label.silver { color: var(--silver); } .seg-label.gold { color: var(--gold); } .seg-label.plat { color: var(--platinum); }
+  .seg-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 10px; }
+  .seg-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .seg-fill { height: 100%; border-radius: 2px; }
+  .seg-fill.bronze { background: var(--bronze); width: 60%; } .seg-fill.silver { width: 0%; background: var(--silver); } .seg-fill.gold { width: 0%; background: var(--gold); } .seg-fill.plat { width: 0%; background: var(--platinum); }
+  .seg-count { margin-top: 6px; font-size: 12px; color: var(--text-dim); }
+
+  .leaderboard-strip { margin: 0 48px 40px; padding: 18px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; gap: 24px; }
+  .lb-title { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); white-space: nowrap; }
+  .lb-entries { display: flex; flex: 1; }
+  .lb-entry { display: flex; align-items: center; gap: 8px; padding: 0 16px; border-right: 1px solid var(--border); }
+  .lb-entry:last-child { border-right: none; }
+  .lb-rank { font-size: 13px; font-weight: 700; color: var(--gold); width: 20px; }
+  .lb-name { font-size: 13px; color: var(--text); }
+  .lb-pts { font-size: 12px; color: var(--text-dim); margin-left: 4px; }
+  .lb-your-rank { font-size: 13px; color: var(--text-dim); white-space: nowrap; }
+  .lb-your-rank strong { color: var(--text); }
+
+  .section-header { padding: 0 48px; margin-bottom: 24px; display: flex; align-items: baseline; gap: 12px; }
+  .section-header h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+  .section-header span { font-size: 13px; color: var(--text-dim); }
+
+  .course-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 0 48px 80px; }
+  .course-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; cursor: pointer; transition: border-color 0.2s, transform 0.15s; position: relative; }
+  .course-card:hover { border-color: var(--gold-dim); transform: translateY(-2px); }
+  .card-thumb { height: 160px; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; position: relative; overflow: hidden; }
+  .bronze-bg { background: linear-gradient(145deg, #1a0f00, #2d1a00 50%, #1a0f00); }
+  .silver-bg { background: linear-gradient(145deg, #0d0d12, #1a1a22 50%, #0d0d12); }
+  .gold-bg   { background: linear-gradient(145deg, #120f00, #251e00 50%, #120f00); }
+  .plat-bg   { background: linear-gradient(145deg, #0d0f10, #181c1e 50%, #0d0f10); }
+  .card-icon { position: absolute; top: 20px; right: 20px; width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+  .card-icon.bronze { background: rgba(205,127,50,0.15); border: 1px solid rgba(205,127,50,0.3); }
+  .card-icon.silver { background: rgba(168,169,173,0.12); border: 1px solid rgba(168,169,173,0.25); }
+  .card-icon.gold   { background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.25); }
+  .card-icon.plat   { background: rgba(208,206,208,0.10); border: 1px solid rgba(208,206,208,0.2); }
+  .card-level { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px; }
+  .card-level.bronze { color: var(--bronze); } .card-level.silver { color: var(--silver); } .card-level.gold { color: var(--gold); } .card-level.plat { color: var(--platinum); }
+  .card-thumb-title { font-size: 18px; font-weight: 800; line-height: 1.2; letter-spacing: -0.3px; }
+  .card-body { padding: 18px 20px 20px; }
+  .card-desc { font-size: 13px; color: var(--text-mid); line-height: 1.5; margin-bottom: 16px; }
+  .card-meta { display: flex; align-items: center; gap: 12px; }
+  .meta-pill { font-size: 12px; color: var(--text-dim); display: flex; align-items: center; gap: 5px; }
+  .card-progress { margin-top: 12px; }
+  .card-progress-bar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin-bottom: 5px; }
+  .card-progress-fill { height: 100%; border-radius: 2px; }
+  .card-progress-fill.bronze { background: var(--bronze); width: 60%; }
+  .card-progress-label { font-size: 11px; color: var(--text-dim); }
+  .card-progress-label strong { color: var(--text); font-weight: 600; }
+  .locked-overlay { position: absolute; inset: 0; background: rgba(15,15,15,0.55); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+
+  /* ══════════════════════════════
+     TRACK PAGE
+  ══════════════════════════════ */
+  .track-hero { display: grid; grid-template-columns: 1fr 360px; gap: 48px; padding: 16px 48px 56px; align-items: start; }
+  .track-eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 14px; }
+  .track-eyebrow.bronze { color: var(--bronze); }
+  .track-title { font-size: 38px; font-weight: 800; letter-spacing: -0.8px; line-height: 1.1; margin-bottom: 18px; }
+  .track-desc { font-size: 16px; color: var(--text-mid); line-height: 1.75; margin-bottom: 32px; max-width: 540px; }
+  .wyl-title { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 14px; }
+  .wyl-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .wyl-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--text-mid); line-height: 1.5; }
+  .wyl-check { flex-shrink: 0; width: 18px; height: 18px; background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--gold); margin-top: 2px; }
+  .cert-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; position: sticky; top: 80px; }
+  .cert-preview { height: 160px; background: linear-gradient(135deg, #1a0f00, #2d1a00 60%, #120a00); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border-bottom: 1px solid var(--border); }
+  .cert-medal { font-size: 44px; line-height: 1; }
+  .cert-preview-title { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bronze); }
+  .cert-preview-sub { font-size: 11px; color: var(--text-dim); }
+  .cert-body { padding: 22px; }
+  .cert-body h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .cert-body p { font-size: 13px; color: var(--text-dim); line-height: 1.5; margin-bottom: 18px; }
+  .cert-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+  .cert-stat { background: var(--surface2); border-radius: 8px; padding: 12px 14px; }
+  .cert-stat-n { font-size: 22px; font-weight: 800; color: var(--gold); line-height: 1; margin-bottom: 4px; }
+  .cert-stat-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+  .btn-primary { display: block; width: 100%; padding: 13px; background: var(--gold); color: #000; font-weight: 700; font-size: 14px; border: none; border-radius: 8px; cursor: pointer; text-align: center; transition: opacity 0.15s; }
+  .btn-primary:hover { opacity: 0.88; }
+  .btn-secondary { display: block; width: 100%; padding: 11px; background: transparent; color: var(--text-mid); font-weight: 600; font-size: 13px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; text-align: center; margin-top: 8px; }
+  .syllabus-section { padding: 0 48px; }
+  .syllabus-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+  .syllabus-header h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+  .syllabus-header span { font-size: 13px; color: var(--text-dim); }
+  .syllabus-item { display: grid; grid-template-columns: 36px 1fr auto; gap: 16px; align-items: start; border-bottom: 1px solid var(--border); cursor: pointer; border-radius: 8px; margin: 0 -12px; padding: 18px 12px; transition: background 0.12s; }
+  .syllabus-item:hover:not(.locked-item) { background: var(--surface); }
+  .item-num { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+  .item-num.done { background: #22c55e; border: 1px solid #16a34a; color: #fff; }
+  .item-num.active { background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.4); color: var(--gold); }
+  .item-num.locked { background: var(--surface2); border: 1px solid var(--border); color: var(--text-dim); }
+  .item-body { flex: 1; }
+  .item-title { font-size: 15px; font-weight: 600; margin-bottom: 5px; }
+  .item-desc { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
+  .item-meta { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+  .item-tag { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; }
+  .item-tag.read { background: rgba(255,255,255,0.06); color: var(--text-dim); }
+  .item-tag.quiz { background: rgba(201,168,76,0.1); color: var(--gold); }
+  .item-tag.done-tag { background: rgba(205,127,50,0.1); color: var(--bronze); }
+  .item-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; min-width: 90px; }
+  .item-status { font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+  .item-status.complete { color: var(--bronze); } .item-status.current { color: var(--gold); } .item-status.locked { color: var(--text-dim); }
+  .item-pts { font-size: 11px; color: var(--text-dim); }
+
+  .prediction-card { background: var(--surface); border: 1px solid rgba(201,168,76,0.25); border-radius: 14px; padding: 28px 32px; margin: 40px 48px 80px; display: flex; gap: 32px; align-items: flex-start; }
+  .prediction-icon { font-size: 32px; flex-shrink: 0; }
+  .prediction-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+  .prediction-q { font-size: 17px; font-weight: 600; line-height: 1.4; margin-bottom: 20px; }
+  .prediction-options { display: flex; gap: 10px; flex-wrap: wrap; }
+  .pred-btn { padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: var(--surface2); color: var(--text); transition: all 0.15s; }
+  .pred-btn:hover { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.08); }
+  .prediction-note { margin-top: 14px; font-size: 12px; color: var(--text-dim); font-style: italic; }
+
+  /* ══════════════════════════════
+     ARTICLE VIEW
+  ══════════════════════════════ */
+  .article-layout { display: grid; grid-template-columns: 1fr 260px; gap: 60px; max-width: 1100px; margin: 0 auto; padding: 0 48px 160px; }
+  .article-main {}
+  .article-header { margin-bottom: 36px; padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+  .article-track-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--bronze); margin-bottom: 16px; }
+  .article-h1 { font-size: 34px; font-weight: 800; letter-spacing: -0.6px; line-height: 1.15; margin-bottom: 16px; }
+  .article-meta { display: flex; align-items: center; gap: 16px; font-size: 13px; color: var(--text-dim); }
+  .article-meta-sep { color: var(--border); }
+  .article-body { font-size: 16px; line-height: 1.8; color: var(--text-mid); }
+  .article-body h2 { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; margin: 48px 0 16px; line-height: 1.3; }
+  .article-body p { margin-bottom: 20px; }
+  .article-body p:last-child { margin-bottom: 0; }
+  .article-body strong { color: var(--text); font-weight: 600; }
+  .article-body .highlight-box { background: rgba(201,168,76,0.07); border-left: 3px solid var(--gold); border-radius: 0 8px 8px 0; padding: 18px 20px; margin: 28px 0; font-size: 15px; color: var(--text); }
+  .article-body .source-note { font-size: 13px; color: var(--text-dim); font-style: italic; padding-top: 32px; margin-top: 40px; border-top: 1px solid var(--border); line-height: 1.6; }
+  /* sidebar */
+  .article-sidebar {}
+  .sidebar-progress { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; position: sticky; top: 80px; }
+  .sidebar-progress h4 { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 16px; }
+  .sidebar-items { display: flex; flex-direction: column; gap: 10px; }
+  .sidebar-item { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+  .sidebar-dot { width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+  .sidebar-dot.done  { background: rgba(205,127,50,0.2); border: 1px solid rgba(205,127,50,0.4); color: var(--bronze); }
+  .sidebar-dot.now   { background: rgba(201,168,76,0.2); border: 1px solid rgba(201,168,76,0.5); color: var(--gold); }
+  .sidebar-dot.next  { background: var(--surface2); border: 1px solid var(--border); color: var(--text-dim); }
+  .sidebar-item-label { color: var(--text-dim); line-height: 1.3; }
+  .sidebar-item-label.now { color: var(--text); font-weight: 600; }
+
+  /* quiz CTA bar — fixed bottom */
+  .quiz-cta-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(15,15,15,0.97); border-top: 1px solid var(--border); padding: 16px 48px; display: flex; align-items: center; justify-content: space-between; backdrop-filter: blur(8px); z-index: 200; }
+  .quiz-cta-left h4 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .quiz-cta-left p { font-size: 12px; color: var(--text-dim); }
+  .quiz-cta-btn { background: var(--gold); color: #000; font-weight: 700; font-size: 15px; border: none; border-radius: 10px; padding: 14px 32px; cursor: pointer; transition: opacity 0.15s; }
+  .quiz-cta-btn:hover { opacity: 0.88; }
+
+  /* ══════════════════════════════
+     QUIZ VIEW
+  ══════════════════════════════ */
+  .quiz-wrap { max-width: 680px; margin: 0 auto; padding: 48px 48px 100px; }
+  .quiz-progress-bar-wrap { background: var(--border); border-radius: 4px; height: 5px; margin-bottom: 40px; overflow: hidden; }
+  .quiz-progress-bar-fill { height: 100%; background: var(--gold); border-radius: 4px; transition: width 0.4s ease; }
+  .quiz-q-label { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 12px; }
+  .quiz-question { font-size: 22px; font-weight: 700; line-height: 1.4; letter-spacing: -0.3px; margin-bottom: 32px; }
+  .quiz-options { display: flex; flex-direction: column; gap: 12px; }
+  .quiz-option { background: var(--surface); border: 2px solid var(--border); border-radius: 12px; padding: 18px 22px; cursor: pointer; font-size: 15px; color: var(--text); transition: all 0.15s; display: flex; align-items: center; gap: 14px; text-align: left; }
+  .quiz-option:hover:not(.revealed) { border-color: var(--gold-dim); background: rgba(201,168,76,0.05); }
+  .quiz-option.selected { border-color: var(--gold); background: rgba(201,168,76,0.08); }
+  .quiz-option.correct-ans { border-color: var(--green); background: rgba(62,207,142,0.08); color: var(--text); }
+  .quiz-option.wrong-ans   { border-color: var(--red); background: rgba(248,113,113,0.08); color: var(--text-dim); }
+  .quiz-option.show-correct { border-color: var(--green); background: rgba(62,207,142,0.08); }
+  .option-letter { width: 32px; height: 32px; border-radius: 8px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+  .quiz-option.correct-ans .option-letter { background: var(--green); border-color: var(--green); color: #000; }
+  .quiz-option.wrong-ans .option-letter   { background: var(--red); border-color: var(--red); color: #000; }
+  .quiz-option.show-correct .option-letter { background: var(--green); border-color: var(--green); color: #000; }
+  .quiz-feedback { margin-top: 24px; border-radius: 10px; padding: 18px 22px; font-size: 14px; line-height: 1.6; display: none; }
+  .quiz-feedback.correct-fb { background: rgba(62,207,142,0.08); border: 1px solid rgba(62,207,142,0.25); color: var(--green); }
+  .quiz-feedback.wrong-fb   { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.25); color: var(--red); }
+  .quiz-feedback strong { display: block; font-size: 15px; margin-bottom: 6px; }
+  .quiz-next-btn { display: none; margin-top: 24px; width: 100%; padding: 15px; background: var(--gold); color: #000; font-weight: 700; font-size: 15px; border: none; border-radius: 10px; cursor: pointer; transition: opacity 0.15s; }
+  .quiz-next-btn:hover { opacity: 0.88; }
+
+  /* ══════════════════════════════
+     QUIZ RESULT VIEW
+  ══════════════════════════════ */
+  .result-wrap { max-width: 560px; margin: 0 auto; padding: 80px 48px; text-align: center; }
+  .result-icon { font-size: 72px; line-height: 1; margin-bottom: 24px; }
+  .result-h { font-size: 34px; font-weight: 800; letter-spacing: -0.6px; margin-bottom: 12px; }
+  .result-sub { font-size: 17px; color: var(--text-mid); margin-bottom: 40px; line-height: 1.6; }
+  .result-score { display: flex; align-items: center; justify-content: center; gap: 40px; margin-bottom: 48px; }
+  .result-stat { text-align: center; }
+  .result-stat-n { font-size: 48px; font-weight: 800; color: var(--gold); line-height: 1; margin-bottom: 6px; }
+  .result-stat-n.green { color: var(--green); }
+  .result-stat-label { font-size: 13px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+  .result-divider { width: 1px; height: 60px; background: var(--border); }
+  .result-pts-earned { background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.25); border-radius: 12px; padding: 16px 24px; margin-bottom: 40px; font-size: 15px; color: var(--gold); font-weight: 600; }
+  .result-pts-earned span { color: var(--text-dim); font-weight: 400; font-size: 13px; }
+  .result-actions { display: flex; flex-direction: column; gap: 10px; }
+  .result-btn-primary { padding: 15px 32px; background: var(--gold); color: #000; font-weight: 700; font-size: 15px; border: none; border-radius: 10px; cursor: pointer; }
+  .result-btn-secondary { padding: 13px 32px; background: transparent; color: var(--text-mid); font-size: 14px; font-weight: 600; border: 1px solid var(--border); border-radius: 10px; cursor: pointer; }
+  .confetti-strip { display: flex; justify-content: center; gap: 8px; font-size: 22px; margin-bottom: 24px; }
+
+  /* cert achievement card */
+  .cert-ach-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px 24px; margin: 0 0 20px; display: flex; align-items: center; gap: 18px; text-align: left; }
+  .cert-ach-icon { font-size: 44px; flex-shrink: 0; line-height: 1; }
+  .cert-ach-body {}
+  .cert-ach-name { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; line-height: 1.35; }
+  .cert-ach-sub { font-size: 12px; color: var(--text-dim); margin-bottom: 14px; }
+  .linkedin-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; background: #0077B5; color: #fff; font-weight: 700; font-size: 12px; border: none; border-radius: 6px; cursor: pointer; letter-spacing: 0.02em; }
+  /* discount card */
+  .discount-card { background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.35); border-radius: 14px; padding: 22px 24px; margin: 0 0 20px; text-align: left; }
+  .discount-header { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+  .discount-badge { background: var(--gold); color: #000; font-weight: 800; font-size: 18px; padding: 8px 14px; border-radius: 8px; white-space: nowrap; letter-spacing: -0.3px; }
+  .discount-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .discount-sub { font-size: 13px; color: var(--text-dim); }
+  .discount-expiry { font-size: 12px; color: var(--text-dim); font-style: italic; }
+  /* retake prompt */
+  .retake-prompt { background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.18); border-radius: 12px; padding: 16px 20px; margin: 0 0 20px; font-size: 14px; color: var(--text-mid); text-align: left; line-height: 1.55; }
+  .retake-prompt strong { color: var(--gold); }
+
+  /* ══════════════════════════════
+     INLINE ARTICLE (ARTICLE 2)
+  ══════════════════════════════ */
+  .inline-section { border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; overflow: hidden; background: var(--surface); }
+  .inline-section-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; }
+  .inline-section.complete .inline-section-header { cursor: pointer; }
+  .inline-section.complete .inline-section-header:hover { background: rgba(255,255,255,0.02); }
+  .inline-sec-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+  .inline-section.open    .inline-sec-num { background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.4); color: var(--gold); }
+  .inline-section.complete .inline-sec-num { background: rgba(62,207,142,0.12); border: 1px solid rgba(62,207,142,0.3); color: var(--green); }
+  .inline-section.locked  .inline-sec-num { background: var(--surface2); border: 1px solid var(--border); color: var(--text-dim); }
+  .inline-sec-title { font-size: 15px; font-weight: 600; flex: 1; }
+  .inline-section.locked .inline-sec-title { color: var(--text-dim); }
+  .inline-sec-status { font-size: 12px; color: var(--text-dim); white-space: nowrap; }
+  .inline-section.complete .inline-sec-status { color: var(--green); }
+  .inline-section-body { padding: 0 20px 20px; border-top: 1px solid var(--border); }
+  .inline-section-body .article-body { padding-top: 20px; font-size: 15px; }
+
+  /* inline question */
+  .inline-question { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); }
+  .iq-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+  .iq-text { font-size: 16px; font-weight: 600; color: var(--text); line-height: 1.45; margin-bottom: 16px; }
+  .iq-options { display: flex; flex-direction: column; gap: 8px; }
+  .iq-option { background: var(--surface2); border: 2px solid var(--border); border-radius: 10px; padding: 12px 16px; cursor: pointer; font-size: 14px; color: var(--text); transition: all 0.15s; display: flex; align-items: center; gap: 12px; text-align: left; width: 100%; }
+  .iq-option:hover:not(.iq-revealed) { border-color: var(--gold-dim); background: rgba(201,168,76,0.05); }
+  .iq-option.iq-correct      { border-color: var(--green); background: rgba(62,207,142,0.08); }
+  .iq-option.iq-wrong        { border-color: var(--red);   background: rgba(248,113,113,0.08); }
+  .iq-option.iq-show-correct { border-color: var(--green); background: rgba(62,207,142,0.06); }
+  .iq-option-letter { width: 26px; height: 26px; border-radius: 6px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+  .iq-option.iq-correct      .iq-option-letter { background: var(--green); border-color: var(--green); color: #000; }
+  .iq-option.iq-wrong        .iq-option-letter { background: var(--red);   border-color: var(--red);   color: #000; }
+  .iq-option.iq-show-correct .iq-option-letter { background: var(--green); border-color: var(--green); color: #000; }
+  .iq-feedback { margin-top: 12px; border-radius: 8px; padding: 14px 16px; font-size: 14px; line-height: 1.55; display: none; }
+  .iq-feedback.iq-correct-fb { background: rgba(62,207,142,0.08); border: 1px solid rgba(62,207,142,0.25); color: var(--green); }
+  .iq-feedback.iq-wrong-fb   { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.25); color: var(--red); }
+  .iq-feedback strong { display: block; font-size: 15px; margin-bottom: 4px; }
+
+  /* capstone block */
+  .capstone-block { border: 1px solid var(--gold-dim); border-radius: 14px; padding: 28px; margin-top: 24px; background: rgba(201,168,76,0.04); }
+  .capstone-header { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+  .capstone-progress { font-size: 13px; color: var(--text-dim); margin-bottom: 14px; }
+  .capstone-q-text { font-size: 18px; font-weight: 700; color: var(--text); line-height: 1.4; margin-bottom: 20px; }
+  .capstone-options { display: flex; flex-direction: column; gap: 10px; }
+  .capstone-option { background: var(--surface); border: 2px solid var(--border); border-radius: 10px; padding: 14px 18px; cursor: pointer; font-size: 14px; color: var(--text); transition: all 0.15s; display: flex; align-items: center; gap: 12px; text-align: left; width: 100%; }
+  .capstone-option:hover:not(.cap-revealed) { border-color: var(--gold-dim); background: rgba(201,168,76,0.05); }
+  .capstone-option.cap-correct      { border-color: var(--green); background: rgba(62,207,142,0.08); }
+  .capstone-option.cap-wrong        { border-color: var(--red);   background: rgba(248,113,113,0.08); }
+  .capstone-option.cap-show-correct { border-color: var(--green); background: rgba(62,207,142,0.06); }
+  .cap-option-letter { width: 28px; height: 28px; border-radius: 6px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+  .capstone-option.cap-correct      .cap-option-letter { background: var(--green); border-color: var(--green); color: #000; }
+  .capstone-option.cap-wrong        .cap-option-letter { background: var(--red);   border-color: var(--red);   color: #000; }
+  .capstone-option.cap-show-correct .cap-option-letter { background: var(--green); border-color: var(--green); color: #000; }
+  .capstone-feedback { margin-top: 12px; border-radius: 8px; padding: 14px 16px; font-size: 14px; line-height: 1.55; display: none; }
+  .capstone-feedback.cap-correct-fb { background: rgba(62,207,142,0.08); border: 1px solid rgba(62,207,142,0.25); color: var(--green); }
+  .capstone-feedback.cap-wrong-fb   { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.25); color: var(--red); }
+  .capstone-feedback strong { display: block; font-size: 15px; margin-bottom: 4px; }
+
+  /* article complete card */
+  .article-complete-card { background: var(--surface); border: 1px solid rgba(62,207,142,0.3); border-radius: 14px; padding: 40px 36px; margin-top: 24px; text-align: center; }
+  .article-complete-icon { font-size: 52px; margin-bottom: 18px; }
+  .article-complete-card h3 { font-size: 26px; font-weight: 800; letter-spacing: -0.4px; margin-bottom: 10px; }
+  .article-complete-score { font-size: 17px; color: var(--gold); font-weight: 600; margin-bottom: 8px; }
+  .article-complete-note { font-size: 14px; color: var(--text-dim); margin-bottom: 28px; line-height: 1.55; }
+
+  /* ══════════════════════════════
+     BRONZE TRACK COMPLETE
+  ══════════════════════════════ */
+  .btc-wrap { margin-top: 24px; padding-bottom: 16px; }
+  .btc-confetti { display: block; text-align: center; font-size: 22px; letter-spacing: 5px; margin-bottom: 32px; }
+  .btc-hero { text-align: center; margin-bottom: 32px; }
+  .btc-medal { font-size: 72px; display: block; line-height: 1; margin-bottom: 18px; }
+  .btc-heading { font-size: 30px; font-weight: 800; letter-spacing: -0.6px; margin-bottom: 10px; }
+  .btc-sub { font-size: 15px; color: var(--text-mid); max-width: 380px; margin: 0 auto; line-height: 1.65; }
+  .btc-stats { display: flex; justify-content: center; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); margin-bottom: 20px; overflow: hidden; }
+  .btc-stat { flex: 1; padding: 18px 12px; text-align: center; }
+  .btc-stat + .btc-stat { border-left: 1px solid var(--border); }
+  .btc-stat-n { font-size: 26px; font-weight: 800; color: var(--gold); line-height: 1; margin-bottom: 5px; }
+  .btc-stat-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.07em; }
+  /* Certificate */
+  .btc-cert { display: flex; align-items: center; gap: 20px; background: var(--surface); border: 1px solid rgba(201,168,76,0.35); border-radius: 14px; padding: 22px 24px; margin-bottom: 16px; text-align: left; position: relative; overflow: hidden; }
+  .btc-cert::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--bronze), var(--gold), var(--bronze)); }
+  .btc-cert-icon { font-size: 48px; flex-shrink: 0; padding-top: 4px; }
+  .btc-cert-name { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 3px; line-height: 1.3; }
+  .btc-cert-meta { font-size: 12px; color: var(--text-dim); margin-bottom: 14px; }
+  /* Discount reveal */
+  .btc-discount { background: linear-gradient(150deg, rgba(201,168,76,0.09) 0%, rgba(201,168,76,0.03) 60%); border: 1.5px solid rgba(201,168,76,0.45); border-radius: 16px; padding: 26px 24px; margin-bottom: 20px; text-align: left; position: relative; overflow: hidden; }
+  .btc-discount::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent 0%, var(--gold) 40%, var(--gold) 60%, transparent 100%); }
+  .btc-discount-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+  .btc-discount-main { display: flex; align-items: center; gap: 20px; margin-bottom: 16px; }
+  .btc-discount-badge { background: var(--gold); color: #000; font-size: 22px; font-weight: 900; padding: 12px 16px; border-radius: 10px; letter-spacing: -0.5px; flex-shrink: 0; line-height: 1; }
+  .btc-discount-title { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 5px; }
+  .btc-discount-body { font-size: 13px; color: var(--text-mid); line-height: 1.55; }
+  .btc-discount-fine { font-size: 12px; color: var(--text-dim); font-style: italic; padding-top: 14px; border-top: 1px solid var(--border); }
+  /* Actions */
+  .btc-actions { display: flex; flex-direction: column; gap: 10px; }
+  .btc-btn-primary { width: 100%; padding: 16px 32px; background: var(--gold); color: #000; font-weight: 700; font-size: 15px; border: none; border-radius: 10px; cursor: pointer; letter-spacing: -0.1px; }
+  .btc-btn-primary:hover { opacity: 0.92; }
+  .btc-btn-secondary { width: 100%; padding: 13px 32px; background: transparent; color: var(--text-mid); font-size: 14px; font-weight: 600; border: 1px solid var(--border); border-radius: 10px; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" onclick="showHome()">
+    <div class="logo-mark">FG</div>
+    <div class="logo-text">First<span>Gold</span>™</div>
+    <div class="nav-badge">Academy</div>
+  </div>
+  <div class="nav-right">
+    <a class="nav-link" href="#">Articles</a>
+    <a class="nav-link" href="#">Leaderboard</a>
+    <a class="nav-link" href="#">Glossary</a>
+    <div class="nav-points" id="nav-points">⚡ 47 pts</div>
+    <div class="nav-avatar">Z</div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════
+     HOME
+══════════════════════════════════════════════════════ -->
+<div id="view-home" class="view active">
+  <div class="hero">
+    <div class="hero-eyebrow">FirstGold™ Academy</div>
+    <h1>Learn gold.<br><em>Understand</em> your investment.</h1>
+    <p>Four progressive tracks covering the economics, history, portfolio science, and Australian regulatory framework of gold and silver investing — from first principles to advanced application.</p>
+  </div>
+  <div class="progress-strip">
+    <div class="progress-seg done">
+      <div class="seg-label bronze">Bronze</div>
+      <div class="seg-name">Gold Fundamentals</div>
+      <div class="seg-bar"><div class="seg-fill bronze"></div></div>
+      <div class="seg-count">3 of 5 complete</div>
+    </div>
+    <div class="progress-seg">
+      <div class="seg-label silver">Silver</div>
+      <div class="seg-name">Markets &amp; Mechanics</div>
+      <div class="seg-bar"><div class="seg-fill silver"></div></div>
+      <div class="seg-count">Locked</div>
+    </div>
+    <div class="progress-seg">
+      <div class="seg-label gold">Gold</div>
+      <div class="seg-name">Investment Framework</div>
+      <div class="seg-bar"><div class="seg-fill gold"></div></div>
+      <div class="seg-count">Locked</div>
+    </div>
+    <div class="progress-seg">
+      <div class="seg-label plat">Platinum</div>
+      <div class="seg-name">Australian Context</div>
+      <div class="seg-bar"><div class="seg-fill plat"></div></div>
+      <div class="seg-count">Locked</div>
+    </div>
+  </div>
+  <div class="leaderboard-strip">
+    <div class="lb-title">🏆 Leaderboard</div>
+    <div class="lb-entries">
+      <div class="lb-entry"><span class="lb-rank">1</span><span class="lb-name">Sarah M.</span><span class="lb-pts">214 pts</span></div>
+      <div class="lb-entry"><span class="lb-rank">2</span><span class="lb-name">James K.</span><span class="lb-pts">188 pts</span></div>
+      <div class="lb-entry"><span class="lb-rank">3</span><span class="lb-name">Priya A.</span><span class="lb-pts">162 pts</span></div>
+      <div class="lb-entry"><span class="lb-rank">4</span><span class="lb-name">Tom R.</span><span class="lb-pts">130 pts</span></div>
+      <div class="lb-entry"><span class="lb-rank">5</span><span class="lb-name">Mei L.</span><span class="lb-pts">115 pts</span></div>
+    </div>
+    <div class="lb-your-rank">Your rank: <strong>#18</strong> · 47 pts</div>
+  </div>
+  <div class="section-header"><h2>Academy Tracks</h2><span>Complete each track to unlock the next</span></div>
+  <div class="course-grid">
+    <div class="course-card" onclick="showTrack()">
+      <div class="card-thumb bronze-bg">
+        <div class="card-icon bronze">🥉</div>
+        <div class="card-level bronze">Bronze</div>
+        <div class="card-thumb-title">Gold<br>Fundamentals</div>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">Start here. Five articles, zero assumed knowledge. What gold is, how it's priced, and why it matters.</div>
+        <div class="card-meta"><div class="meta-pill">📄 5 articles</div><div class="meta-pill">✏️ 5 quizzes</div></div>
+        <div class="card-progress">
+          <div class="card-progress-bar"><div class="card-progress-fill bronze"></div></div>
+          <div class="card-progress-label"><strong>3 of 5</strong> complete</div>
+        </div>
+      </div>
+    </div>
+    <div class="course-card" style="opacity:0.55;cursor:default;">
+      <div class="card-thumb silver-bg">
+        <div class="card-icon silver">🥈</div>
+        <div class="card-level silver">Silver</div>
+        <div class="card-thumb-title">Markets &amp;<br>Mechanics</div>
+        <div class="locked-overlay">🔒</div>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">How gold is priced, traded, and held globally. Real rates, the LBMA, central banks, and investment vehicles.</div>
+        <div class="card-meta"><div class="meta-pill">📄 5 articles</div><div class="meta-pill">✏️ 5 quizzes</div></div>
+        <div class="card-progress">
+          <div class="card-progress-bar"><div class="card-progress-fill" style="width:0%;background:var(--silver)"></div></div>
+          <div class="card-progress-label">Complete Bronze to unlock</div>
+        </div>
+      </div>
+    </div>
+    <div class="course-card" style="opacity:0.55;cursor:default;">
+      <div class="card-thumb gold-bg">
+        <div class="card-icon gold">🥇</div>
+        <div class="card-level gold">Gold</div>
+        <div class="card-thumb-title">Investment<br>Framework</div>
+        <div class="locked-overlay">🔒</div>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">Portfolio science, price drivers, safe haven evidence, and crisis behaviour — grounded in peer-reviewed research.</div>
+        <div class="card-meta"><div class="meta-pill">📄 5 articles</div><div class="meta-pill">✏️ 5 quizzes</div></div>
+        <div class="card-progress">
+          <div class="card-progress-bar"><div class="card-progress-fill" style="width:0%;background:var(--gold)"></div></div>
+          <div class="card-progress-label">Complete Silver to unlock</div>
+        </div>
+      </div>
+    </div>
+    <div class="course-card" style="opacity:0.55;cursor:default;">
+      <div class="card-thumb plat-bg">
+        <div class="card-icon plat">💎</div>
+        <div class="card-level plat">Platinum</div>
+        <div class="card-thumb-title">Australian<br>Context</div>
+        <div class="locked-overlay">🔒</div>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">CGT, SMSF rules, the AUD gold price, and how FirstGold works. The complete Australian regulatory framework.</div>
+        <div class="card-meta"><div class="meta-pill">📄 5 articles</div><div class="meta-pill">✏️ 5 quizzes</div></div>
+        <div class="card-progress">
+          <div class="card-progress-bar"><div class="card-progress-fill" style="width:0%;background:var(--platinum)"></div></div>
+          <div class="card-progress-label">Complete Gold to unlock</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     TRACK VIEW
+══════════════════════════════════════════════════════ -->
+<div id="view-track" class="view">
+  <div class="breadcrumb"><a onclick="showHome()">Academy</a><span class="sep">›</span><span class="current">Gold Fundamentals</span></div>
+  <div class="track-hero">
+    <div>
+      <div class="track-eyebrow bronze">🥉 Bronze Track</div>
+      <div class="track-title">Gold Fundamentals</div>
+      <div class="track-desc">The starting point for every FirstGold Academy learner. Five articles, zero assumed knowledge — covering what gold is, how it is priced, why it has served as money for thousands of years, and how it compares to silver.</div>
+      <div class="wyl-title">What you will learn</div>
+      <ul class="wyl-list">
+        <li><div class="wyl-check">✓</div>What gold is, how it is measured, and what distinguishes investment-grade bullion from jewellery</li>
+        <li><div class="wyl-check">✓</div>The difference between spot price and the price you pay — and how that gap is set</li>
+        <li><div class="wyl-check">✓</div>How allocated and unallocated gold differ, and why the distinction matters for ownership</li>
+        <li><div class="wyl-check">✓</div>The monetary history of gold: from ancient coinage to Bretton Woods to Nixon's 1971 decision</li>
+        <li><div class="wyl-check">✓</div>The structural differences between gold and silver, and why they behave differently in a portfolio</li>
+      </ul>
+    </div>
+    <div class="cert-card">
+      <div class="cert-preview"><div class="cert-medal">🥉</div><div class="cert-preview-title">Certificate of Excellence</div><div class="cert-preview-sub">FirstGold™ Academy</div></div>
+      <div class="cert-body">
+        <h3>Earn your Bronze certificate</h3>
+        <p>Score 9/10 on each quiz to earn your certificate. Score 10/10 to also unlock a discount on your order, valid for 90 days.</p>
+        <div class="cert-stats">
+          <div class="cert-stat"><div class="cert-stat-n">5</div><div class="cert-stat-label">Articles</div></div>
+          <div class="cert-stat"><div class="cert-stat-n">5</div><div class="cert-stat-label">Quizzes</div></div>
+          <div class="cert-stat"><div class="cert-stat-n" id="complete-count">3</div><div class="cert-stat-label">Complete</div></div>
+          <div class="cert-stat"><div class="cert-stat-n" id="pts-earned">47</div><div class="cert-stat-label">Points</div></div>
+        </div>
+        <button class="btn-primary" onclick="showArticle(4)">Continue → Article 4</button>
+        <button class="btn-secondary">View my progress</button>
+      </div>
+    </div>
+  </div>
+  <div class="syllabus-section">
+    <div class="syllabus-header"><h2>Syllabus</h2><span>5 articles · 5 quizzes · 1 certificate</span></div>
+    <div class="syllabus-list">
+      <div class="syllabus-item">
+        <div class="item-num done">✓</div>
+        <div class="item-body">
+          <div class="item-title">1. What Is Gold? A Primer</div>
+          <div class="item-desc">The element, the metal, the market. Physical properties, how gold is measured, what forms it takes, and why it has been treated as a monetary asset for millennia.</div>
+          <div class="item-meta"><span class="item-tag read">Article</span><span class="item-tag done-tag">Quiz passed 5/5</span></div>
+        </div>
+        <div class="item-right"><div class="item-status complete">✓ Complete</div><div class="item-pts">+3 pts</div></div>
+      </div>
+      <div class="syllabus-item" onclick="showInlineArticle(2)">
+        <div class="item-num done">✓</div>
+        <div class="item-body">
+          <div class="item-title">2. How Spot Price Works</div>
+          <div class="item-desc">Where the gold price comes from, how it moves in real time, and the difference between spot price and the price on your invoice.</div>
+          <div class="item-meta"><span class="item-tag read">Article</span><span class="item-tag done-tag">Quiz passed 4/5</span></div>
+        </div>
+        <div class="item-right"><div class="item-status complete">✓ Complete</div><div class="item-pts">+2 pts</div></div>
+      </div>
+      <div class="syllabus-item" onclick="showArticle(3)">
+        <div class="item-num done">✓</div>
+        <div class="item-body">
+          <div class="item-title">3. Allocated vs Unallocated Gold</div>
+          <div class="item-desc">The most important distinction in physical gold ownership — what you actually own in each structure, and why it matters.</div>
+          <div class="item-meta"><span class="item-tag read">Article</span><span class="item-tag done-tag">Quiz passed 5/5</span></div>
+        </div>
+        <div class="item-right"><div class="item-status complete">✓ Complete</div><div class="item-pts">+3 pts</div></div>
+      </div>
+      <div class="syllabus-item" onclick="showArticle(4)">
+        <div class="item-num active">4</div>
+        <div class="item-body">
+          <div class="item-title">4. The History of Gold as Money</div>
+          <div class="item-desc">From the first gold coins to Bretton Woods to Nixon's 1971 decision — and what the end of the gold standard means for today's market.</div>
+          <div class="item-meta"><span class="item-tag read">Article</span><span class="item-tag quiz">Quiz · 10 questions</span></div>
+        </div>
+        <div class="item-right"><div class="item-status current">▶ Up next</div><div class="item-pts">+3 pts available</div></div>
+      </div>
+      <div class="syllabus-item" onclick="showInlineArticle(5)">
+        <div class="item-num active">5</div>
+        <div class="item-body">
+          <div class="item-title">5. Gold vs Silver: Two Precious Metals, Two Different Assets</div>
+          <div class="item-desc">Why calling silver "cheaper gold" misses the point. Supply structure, demand profile, price behaviour, and storage implications.</div>
+          <div class="item-meta"><span class="item-tag read">Article</span><span class="item-tag quiz">Inline quiz · 6 sections + capstone</span></div>
+        </div>
+        <div class="item-right"><div class="item-status current">▶ Up next</div><div class="item-pts">+18 pts available</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="prediction-card">
+    <div class="prediction-icon">📊</div>
+    <div class="prediction-body">
+      <div class="prediction-eyebrow">🏆 Bronze Prediction — Unlocked</div>
+      <div class="prediction-q">Over the next 12 months, do you think gold will outperform or underperform Australian equities?</div>
+      <div class="prediction-options">
+        <button class="pred-btn" onclick="votePrediction(this)">📈 Outperform</button>
+        <button class="pred-btn" onclick="votePrediction(this)">📉 Underperform</button>
+        <button class="pred-btn" onclick="votePrediction(this)">🤝 Too close to call</button>
+      </div>
+      <div class="prediction-note">See how other Academy learners voted. We'll revisit your prediction in 12 months.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     ARTICLE VIEW
+══════════════════════════════════════════════════════ -->
+<div id="view-article" class="view">
+  <div class="breadcrumb">
+    <a onclick="showHome()">Academy</a><span class="sep">›</span>
+    <a onclick="showTrack()">Gold Fundamentals</a><span class="sep">›</span>
+    <span class="current" id="article-breadcrumb-current">The History of Gold as Money</span>
+  </div>
+  <div class="article-layout">
+    <div class="article-main">
+      <div class="article-header">
+        <div class="article-track-tag" id="article-track-tag-el">🥉 Bronze Track · Article 4 of 5</div>
+        <div class="article-h1" id="article-h1-el">The History of Gold as Money</div>
+        <div class="article-meta">
+          <span id="article-read-time">8 min read</span>
+          <span class="article-meta-sep">·</span>
+          <span>Quiz after reading</span>
+          <span class="article-meta-sep">·</span>
+          <span style="color:var(--gold)">+3 pts</span>
+        </div>
+      </div>
+      <div class="article-body" id="article-body-el">
+        <!-- populated by showArticle() -->
+      </div>
+    </div>
+    <!-- Sidebar -->
+    <div class="article-sidebar">
+      <div class="sidebar-progress">
+        <h4>Bronze Track Progress</h4>
+        <div class="sidebar-items" id="article-sidebar-items">
+          <!-- populated by showArticle() -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Fixed quiz CTA -->
+  <div class="quiz-cta-bar">
+    <div class="quiz-cta-left">
+      <h4>Ready to test your knowledge?</h4>
+      <p>10 questions · 9/10 to pass · earn up to 5 pts</p>
+    </div>
+    <button class="quiz-cta-btn" onclick="showQuiz()">Take the Quiz →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     QUIZ VIEW
+══════════════════════════════════════════════════════ -->
+<div id="view-quiz" class="view">
+  <div class="breadcrumb">
+    <a onclick="showHome()">Academy</a><span class="sep">›</span>
+    <a onclick="showTrack()">Gold Fundamentals</a><span class="sep">›</span>
+    <a onclick="showArticle(currentArticle)" id="quiz-breadcrumb-article">The History of Gold as Money</a><span class="sep">›</span>
+    <span class="current">Quiz</span>
+  </div>
+  <div class="quiz-wrap">
+    <div class="quiz-progress-bar-wrap">
+      <div class="quiz-progress-bar-fill" id="quiz-bar" style="width:10%"></div>
+    </div>
+    <div id="quiz-q-label" class="quiz-q-label">Question 1 of 10</div>
+    <div id="quiz-question" class="quiz-question"></div>
+    <div id="quiz-options" class="quiz-options"></div>
+    <div id="quiz-feedback" class="quiz-feedback"></div>
+    <button id="quiz-next-btn" class="quiz-next-btn" onclick="nextQuestion()">Next question →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     RESULT VIEW
+══════════════════════════════════════════════════════ -->
+<div id="view-result" class="view">
+  <div class="result-wrap">
+    <div id="result-confetti" class="confetti-strip"></div>
+    <div id="result-icon" class="result-icon"></div>
+    <div id="result-h" class="result-h"></div>
+    <div id="result-sub" class="result-sub"></div>
+    <div class="result-score">
+      <div class="result-stat">
+        <div id="result-score-n" class="result-stat-n green"></div>
+        <div class="result-stat-label">Correct</div>
+      </div>
+      <div class="result-divider"></div>
+      <div class="result-stat">
+        <div id="result-total-n" class="result-stat-n" style="color:var(--text-dim)">10</div>
+        <div class="result-stat-label">Questions</div>
+      </div>
+      <div class="result-divider"></div>
+      <div class="result-stat">
+        <div id="result-pct" class="result-stat-n"></div>
+        <div class="result-stat-label">Score</div>
+      </div>
+    </div>
+    <div id="result-pts" class="result-pts-earned"></div>
+
+    <!-- Certificate achievement card — shown on 9/10 or 10/10 -->
+    <div id="result-cert-card" class="cert-ach-card" style="display:none;">
+      <div class="cert-ach-icon">🥉</div>
+      <div class="cert-ach-body">
+        <div class="cert-ach-name">Certificate of Excellence in Precious Metals Fundamentals</div>
+        <div class="cert-ach-sub" id="result-cert-sub">FirstGold™ Academy · Bronze Track</div>
+        <button class="linkedin-btn">in &nbsp; Share on LinkedIn</button>
+      </div>
+    </div>
+
+    <!-- Discount card — shown on 10/10 only -->
+    <div id="result-discount-card" class="discount-card" style="display:none;">
+      <div class="discount-header">
+        <div class="discount-badge">1% OFF</div>
+        <div>
+          <div class="discount-title">Bronze Discount Unlocked</div>
+          <div class="discount-sub">1% off your next FirstGold order</div>
+        </div>
+      </div>
+      <div class="discount-expiry">Valid for 90 days · Applied at checkout · Requires a FirstGold account</div>
+    </div>
+
+    <!-- Retake prompt — shown on 9/10 only -->
+    <div id="result-retake-prompt" class="retake-prompt" style="display:none;">
+      You're one question away from unlocking a <strong>1% Bronze discount</strong> on your first order, valid for 90 days.
+    </div>
+
+    <div id="result-actions" class="result-actions">
+      <button id="btn-continue" class="result-btn-primary" onclick="showTrack()">Back to Track →</button>
+      <button id="btn-retake" class="result-btn-secondary" onclick="showQuiz()">Retake quiz</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     INLINE ARTICLE VIEW (ARTICLE 2)
+══════════════════════════════════════════════════════ -->
+<div id="view-article-inline" class="view">
+  <div class="breadcrumb">
+    <a onclick="showHome()">Academy</a>
+    <span class="sep">›</span>
+    <a onclick="showTrack()">Bronze Track</a>
+    <span class="sep">›</span>
+    <span class="current" id="inline-breadcrumb-current">How the Gold Spot Price Works</span>
+  </div>
+  <div class="article-layout">
+    <div class="article-main">
+      <div class="article-header">
+        <div class="article-track-tag" id="inline-track-tag">🥉 Bronze Track · Article 2 of 5</div>
+        <h1 class="article-h1" id="inline-article-h1">How the Gold Spot Price Works</h1>
+        <div class="article-meta">
+          <span>12 min read</span>
+          <span class="article-meta-sep">·</span>
+          <span>Read each section, then answer the question to unlock the next</span>
+        </div>
+      </div>
+      <div id="inline-sections-wrap"></div>
+      <div id="inline-capstone" class="capstone-block" style="display:none">
+        <div class="capstone-header">Knowledge Check — Complete all 3 to finish this article</div>
+        <div id="capstone-q-wrap"></div>
+      </div>
+      <div id="inline-complete-card" class="article-complete-card" style="display:none">
+        <div class="article-complete-icon">✓</div>
+        <h3>Article complete</h3>
+        <p class="article-complete-score" id="inline-complete-score"></p>
+        <p class="article-complete-note">This article counts toward your Bronze Track certificate. Complete all five articles to qualify.</p>
+        <button class="btn-primary" id="inline-complete-btn" style="max-width:260px;margin:0 auto;">Next Article →</button>
+      </div>
+
+      <div id="bronze-track-complete" style="display:none">
+        <div class="btc-wrap">
+          <span class="btc-confetti">🎉 🥉 ⭐ 🥉 🎉 ⭐ 🥉 🎉</span>
+          <div class="btc-hero">
+            <span class="btc-medal">🥉</span>
+            <h2 class="btc-heading">Bronze Track Complete</h2>
+            <p class="btc-sub">You've read all five articles and answered every question. That's the full foundation of gold investing.</p>
+          </div>
+          <div class="btc-stats">
+            <div class="btc-stat">
+              <div class="btc-stat-n" id="btc-pts">—</div>
+              <div class="btc-stat-label">Points earned</div>
+            </div>
+            <div class="btc-stat">
+              <div class="btc-stat-n">5</div>
+              <div class="btc-stat-label">Articles done</div>
+            </div>
+            <div class="btc-stat">
+              <div class="btc-stat-n">1</div>
+              <div class="btc-stat-label">Certificate</div>
+            </div>
+          </div>
+          <div class="btc-cert">
+            <div class="btc-cert-icon">🥉</div>
+            <div>
+              <div class="btc-cert-name">Certificate of Excellence in Precious Metals Fundamentals</div>
+              <div class="btc-cert-meta">FirstGold™ Academy · Bronze Track · 2026</div>
+              <button class="linkedin-btn">in &nbsp; Share on LinkedIn</button>
+            </div>
+          </div>
+          <div class="btc-discount">
+            <div class="btc-discount-eyebrow">⚡ Reward unlocked</div>
+            <div class="btc-discount-main">
+              <div class="btc-discount-badge">1%<br>OFF</div>
+              <div>
+                <div class="btc-discount-title">Your Bronze Discount is Ready</div>
+                <div class="btc-discount-body">1% off your next FirstGold order. You earned it by completing the full Bronze Track — five articles, every question answered.</div>
+              </div>
+            </div>
+            <div class="btc-discount-fine">Valid for 90 days · Applied automatically at checkout · New and existing customers</div>
+          </div>
+          <div class="btc-actions">
+            <button class="btc-btn-primary" onclick="showHome()">Sign up to claim your discount →</button>
+            <button class="btc-btn-secondary" onclick="showHome()">Return to Academy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="article-sidebar">
+      <div class="sidebar-progress">
+        <h4>Bronze Track</h4>
+        <div class="sidebar-items">
+          <div class="sidebar-item"><div class="sidebar-dot done" id="inline-sd-1">✓</div><div class="sidebar-item-label">What Is Gold? A Primer</div></div>
+          <div class="sidebar-item"><div class="sidebar-dot" id="inline-sd-2"></div><div class="sidebar-item-label" id="inline-sl-2">How Spot Price Works</div></div>
+          <div class="sidebar-item"><div class="sidebar-dot" id="inline-sd-3"></div><div class="sidebar-item-label" id="inline-sl-3">Allocated vs Unallocated Gold</div></div>
+          <div class="sidebar-item"><div class="sidebar-dot" id="inline-sd-4"></div><div class="sidebar-item-label" id="inline-sl-4">The History of Gold as Money</div></div>
+          <div class="sidebar-item"><div class="sidebar-dot" id="inline-sd-5"></div><div class="sidebar-item-label" id="inline-sl-5">Gold vs Silver</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── article & quiz data ────────────────────────────────
+
+const ARTICLES = {
+  3: {
+    num: 3,
+    title: "Allocated vs Unallocated Gold",
+    readTime: "9 min read",
+    trackTag: "Bronze Track · Article 3 of 5",
+    sidebar: [
+      { state: "done", label: "What Is Gold? A Primer" },
+      { state: "done", label: "How Spot Price Works" },
+      { state: "now",  label: "Allocated vs Unallocated Gold" },
+      { state: "next", label: "The History of Gold as Money" },
+      { state: "next", label: "Gold vs Silver" }
+    ],
+    html: `
+<p>When you buy gold, you are not automatically buying gold. Depending on how the transaction is structured, you may be acquiring direct ownership of specific metal bars — or you may be acquiring a contractual claim against a financial institution for the equivalent quantity of metal. These two arrangements, known as <strong>allocated</strong> and <strong>unallocated</strong> gold, are legally and structurally different in ways that matter most when markets come under stress.</p>
+<p>It is the foundational question of precious metals ownership.</p>
+
+<h2>The Two Structures</h2>
+<p><strong>Allocated gold</strong> refers to physical gold bars stored in a vault that are specifically assigned to you as the holder. Each bar carries a unique serial number, a recorded weight, and a stated fineness. The World Gold Council, in a white paper produced in collaboration with law firm Linklaters LLP, defines it precisely: allocated gold involves "the transfer of direct ownership and title to specific gold bars, which has traditionally provided holders with the certainty of gold ownership while insulating holders from the credit risk of the custodian banks."</p>
+<p>The ownership is direct. The bars exist. They are yours. The custodian holds them on your behalf — in legal terms, on <strong>bailment</strong> — but they do not appear on the custodian's balance sheet as an asset. If the custodian fails, those bars are not available to its creditors. They remain your property.</p>
+
+<div class="highlight-box">Allocated gold is held on bailment: the custodian has physical possession but no ownership rights. Your bars sit outside the dealer's balance sheet entirely — they cannot be lent, pledged, or used as collateral.</div>
+
+<p><strong>Unallocated gold</strong> operates on an entirely different basis. Here, the WGC/Linklaters definition is equally precise: unallocated gold is "a holder's credit claim against an institution where their unallocated account is held, for a specific quantity of gold." Specific bars are not set aside for you. Instead, "the holder has a contractual right against the institution… in respect of their entitlement."</p>
+<p>The institution typically holds physical gold on its own balance sheet as a hedge against the claims of unallocated account holders. But the relationship between you and that gold is indirect and contractual. You hold a claim; the institution holds the metal.</p>
+<p>The practical consequence, stated plainly: if the institution were to become insolvent, an unallocated gold holder's claim would rank alongside those of other <strong>unsecured creditors</strong>. The gold itself, which may have appreciated significantly, would form part of the estate available to satisfy creditor claims generally. You would be a creditor, not an owner.</p>
+
+<h2>Why This Distinction Exists</h2>
+<p>The two structures exist because they solve different problems.</p>
+<p>Unallocated gold is the workhorse of the global wholesale gold market. The London Bullion Market Association (LBMA), the industry body that sets standards for gold traded in the world's largest OTC gold market, reports that the vast majority of trades in the Loco London market — the primary settlement venue for global gold — are settled through unallocated accounts. The convenience is operational: no specific bars need to move, no serial numbers need to be matched, balances are denominated in fine troy ounces to three decimal places and can be transferred in any denomination. For banks, commodity traders, and institutional participants moving large positions frequently, this flexibility is essential.</p>
+<p>Allocated gold is operationally heavier. Good Delivery bars — the LBMA's standard bar size — weigh approximately 400 troy ounces, currently equivalent to roughly A$1.6 million at prevailing gold prices. An allocated account means dealing in whole bars, managing bar lists, and coordinating physical movement or vault-to-vault transfers when positions change. For professional traders executing dozens of transactions per day, this creates friction. For a long-term investor seeking ownership certainty, the same friction is a feature rather than a problem.</p>
+
+<h2>The Credit Risk in Practice</h2>
+<p>In stable market conditions, the difference between allocated and unallocated may appear academic. Established financial institutions rarely fail, and the operational advantages of unallocated gold are real and meaningful.</p>
+<p>The relevance of the distinction tends to become apparent during precisely those periods when investors most want their gold holdings to perform their intended function: periods of financial stress. The 2007–2009 global financial crisis demonstrated the speed at which apparently sound institutions can encounter liquidity crises and, in some cases, insolvency. Investors holding unallocated accounts at distressed institutions would have faced a qualitatively different situation from those holding allocated bars in the same period.</p>
+<p>This is not a hypothetical risk unique to extreme scenarios. It is a structural feature of the contractual arrangement. <strong>Counterparty risk</strong> in an unallocated account does not require institutional failure — it requires only that the institution's obligations to you compete with its other obligations. The form that competition takes depends entirely on circumstances.</p>
+
+<h2>The Good Delivery Standard</h2>
+<p>Both allocated and unallocated gold in the professional market operate against a quality standard: LBMA Good Delivery. To be acceptable in the Loco London market, bars must meet specific requirements for gold purity (minimum 99.5% fineness), weight, physical dimensions, and refiner accreditation. The LBMA maintains a Good Delivery List of approved refiners whose bars are accepted as standard settlement instruments globally.</p>
+<p>This quality standard means that allocated gold is standardised, assay-certified metal produced by refiners operating under defined quality controls. When a bar is specifically allocated to you, its serial number, weight, and fineness are recorded in your account documentation. The bar exists at a known location in a certified vault.</p>
+<p>For retail investors purchasing gold through a dealer rather than through the professional OTC market, equivalent principles apply. The dealer's obligations to you — whether they hold specific bars set aside in your name, or hold your gold in a pooled account, or simply owe you a contractual obligation to deliver gold — determine the nature of your ownership in ways that parallel the allocated/unallocated distinction at the institutional level.</p>
+
+<h2>Trade-offs, Not a Verdict</h2>
+<p>Neither structure is without trade-offs, and the right choice depends on the investor's circumstances, time horizon, and purpose for holding gold.</p>
+<p>Unallocated accounts offer lower costs (no per-bar storage and insurance overhead), fractional quantity flexibility, and access to the deep liquidity of the OTC market. For investors using gold as a short-to-medium-term trading position, or for institutions managing dynamic gold exposure, these advantages are substantial.</p>
+<p>Allocated accounts offer direct ownership, elimination of counterparty credit risk, and — for investors who intend to hold for the long term — the certainty that their gold holdings represent a claim on nothing except the metal itself. The WGC/Linklaters paper describes allocated gold as providing "the certainty of gold ownership," a precise formulation that captures both the benefit and its scope.</p>
+
+<div class="highlight-box">The question is not which structure is better in the abstract — it is which structure is appropriate for your purpose. A long-term investor seeking to eliminate counterparty risk and a commodity trader managing daily exposure have different needs. Ownership structure should follow purpose.</div>
+
+<h2>How the LBMA Frames It</h2>
+<p>The LBMA's own published guidance on precious metal accounts draws the same distinction in the context of its member firms' client obligations. Allocated accounts involve documented bar lists that are the property of the client; unallocated accounts involve a credit balance on the institution's books.</p>
+<p>The LBMA has also observed that the efficiency advantages of unallocated settlement are precisely what drove the deep liquidity of the London market, and that this liquidity is, in turn, one of gold's defining characteristics as a financial asset. The trade-off between liquidity and ownership certainty is structural to the gold market, not a product of any one dealer's offering.</p>
+
+<h2>What to Confirm When Buying Gold</h2>
+<p>Investors evaluating a gold purchase — from a bullion dealer, a bank, a digital gold platform, or any other provider — should seek specific answers to the following:</p>
+<p><strong>Is my gold allocated or unallocated?</strong> If allocated, ask for the bar list: the serial numbers, weights, and fineness of bars held on your behalf.</p>
+<p><strong>Who is the custodian?</strong> For allocated gold, the custodian holds the metal on your behalf under a bailment arrangement. The quality and independence of the custodian matters.</p>
+<p><strong>Is the gold insured?</strong> Storage and insurance are distinct obligations. Confirm both are in place and ask who holds the insurance policy.</p>
+<p><strong>What happens to my gold if the dealer becomes insolvent?</strong> For allocated holdings with a true bailment structure, the metal is your property and sits outside the dealer's estate. For unallocated or pooled arrangements, the answer will depend on the specific contractual terms.</p>
+<p>These are factual questions with factual answers. A reputable provider will answer them clearly. If the answers are unclear, the nature of your ownership is unclear.</p>
+
+<h2>A Note on Terminology in Practice</h2>
+<p>The terms "allocated" and "unallocated" originate in the professional wholesale market. Retail gold products use different terminology — such as "physical gold," "segregated storage," "pool-allocated," "digital gold," and "certificate gold" — and these terms do not map cleanly onto the allocated/unallocated framework.</p>
+<p>Some products described as "physical gold" involve allocated, segregated storage of specific bars. Others involve a pooled interest in a larger holding, or a contractual entitlement backed by metal held on the provider's balance sheet. The legal and credit implications of each differ.</p>
+<p>The underlying question is always the same: does your gold holding represent direct ownership of specific metal, or a contractual entitlement? The answer to that question defines the nature of the credit risk you carry — and it deserves a clear answer before any gold purchase is made.</p>
+
+<div class="source-note"><em>Sources: World Gold Council and Linklaters LLP, "Pooled Gold Interests and Wholesale Digital Gold: A New Vision for the Gold Market" (WGC industry white paper); LBMA, "A Guide to the Loco London Precious Metals Market." This article is educational and does not constitute financial advice.</em></div>
+`
+  },
+  4: {
+    num: 4,
+    title: "The History of Gold as Money",
+    readTime: "8 min read",
+    trackTag: "Bronze Track · Article 4 of 5",
+    sidebar: [
+      { state: "done", label: "What Is Gold? A Primer" },
+      { state: "done", label: "How Spot Price Works" },
+      { state: "done", label: "Allocated vs Unallocated Gold" },
+      { state: "now",  label: "The History of Gold as Money" },
+      { state: "next", label: "Gold vs Silver" }
+    ],
+    html: `
+<p>Gold has served as money for longer than any other material in human history. The reasons are not cultural or arbitrary — they are physical. Gold is scarce, durable, divisible, and recognisable. No other naturally occurring element satisfies all four requirements as completely. The story of gold as money is, at its core, the story of those properties being discovered, tested, and relied upon across thousands of years and dozens of civilisations.</p>
+
+<h2>The First Gold Coins</h2>
+<p>The earliest known gold coins were minted in Lydia — a kingdom in what is now western Turkey — around 600 BCE. The Lydian stater was struck from electrum, a naturally occurring alloy of gold and silver, and bore the emblem of the ruling king. Its significance was not decorative: coinage allowed a government to certify the weight and purity of metal, replacing the laborious process of weighing and assaying every transaction.</p>
+<p>From Lydia, coinage spread rapidly through the Greek world and then to the Persian Empire, Rome, and beyond. Different kingdoms issued different coins, but gold was the common denominator of high-value exchange across Eurasia for two millennia. A Roman gold aureus and a Byzantine gold solidus and an Islamic gold dinar were minted by different empires, in different centuries, but all contained approximately the same amount of gold — because that amount, roughly 4 to 4.5 grams, had proven across generations to be a practical and trusted unit of value.</p>
+
+<div class="highlight-box">The gold coin was not a symbol of wealth — it <em>was</em> wealth, in portable, verifiable form. Its value was not a promise; it was the metal itself.</div>
+
+<h2>The Gold Standard</h2>
+<p>The classical gold standard — where a national currency was directly convertible into a fixed quantity of gold on demand — was formalised in Britain in 1821 after the Napoleonic Wars and adopted by most major economies between 1870 and 1900. The US joined formally with the Gold Standard Act of 1900, fixing the dollar at $20.67 per troy ounce.</p>
+<p>The gold standard had a built-in discipline: governments could not print money beyond their gold reserves without risking a run on those reserves. This constrained inflation but also constrained economic policy. When the Great Depression struck in the 1930s, countries began abandoning the gold standard to allow more expansionary monetary policy. Britain left in 1931; the US partially suspended domestic convertibility in 1933.</p>
+
+<h2>Bretton Woods: The Modified Standard</h2>
+<p>After World War II, the 1944 Bretton Woods conference established a new international monetary framework. The US dollar was pegged to gold at US$35 per troy ounce, and all other major currencies were pegged to the dollar. The dollar, in effect, became a proxy for gold — other countries held dollars rather than gold, knowing they could convert those dollars to gold at a fixed rate.</p>
+<p>This system made the US dollar the world's primary reserve currency. It also created a fundamental tension: the system depended on the US maintaining sufficient gold reserves to back the dollars held globally. As the US economy expanded and dollars flowed overseas through foreign aid, military spending, and trade deficits, the ratio of dollars to gold deteriorated. By the late 1960s, the US held far fewer gold reserves than there were dollars outstanding internationally.</p>
+
+<h2>The Nixon Shock: 1971</h2>
+<p>On 15 August 1971, US President Richard Nixon announced that the United States would suspend the convertibility of the dollar into gold. The Bretton Woods system collapsed. Gold was no longer the anchor of the international monetary system.</p>
+<p>Nixon's decision was driven by inflation — the US had been running deficits to fund the Vietnam War and domestic spending programmes, and inflation had eroded the credibility of the dollar's gold peg. Other countries had begun demanding gold in exchange for their dollar holdings, and US gold reserves were falling. Nixon suspended convertibility as a temporary measure; it became permanent.</p>
+
+<div class="highlight-box">The Nixon shock did not destroy gold — it freed it. For the first time in modern history, gold's price was set by markets rather than by government decree. Within a decade, it had risen from US$35 to over US$800 per troy ounce.</div>
+
+<h2>Gold After the Gold Standard</h2>
+<p>The end of Bretton Woods did not end gold's monetary role — it changed its form. Gold is no longer required to back currencies, and it does not circulate as everyday money. But central banks continued to hold it. Investors continued to seek it in times of uncertainty. Its price, now freely floating, responded to the same forces it always had: confidence in paper money, real interest rates, geopolitical stability, and the supply of the metal itself.</p>
+<p>The World Gold Council estimates that global gold mine production has averaged approximately 1.7% growth per year — a rate far below the growth in money supply. That scarcity premium, built into gold over millennia of monetary use, did not evaporate when Nixon closed the gold window. It persisted, in a different institutional form, into the modern market.</p>
+<p>Today, central banks hold approximately 35,000 tonnes of gold in official reserves — roughly 17% of all above-ground gold ever mined. They do not hold it because they are legally required to. They hold it because the properties that made gold money for three thousand years did not change in 1971.</p>
+
+<div class="source-note"><em>Sources: Bordo, M. (2020), "The Bretton Woods International Monetary System: A Historical Overview"; World Gold Council, "Gold as a Strategic Asset, 2026 Edition." This article is educational and does not constitute financial advice.</em></div>
+`
+  }
+};
+
+const QUIZ_DATA = {
+  3: [
+    {
+      q: "What does 'allocated' mean in the context of gold ownership?",
+      options: [
+        "The dealer sets aside a portion of their total gold stock as a reserve backing your balance",
+        "The metal is owned 100% in your name and vaulted on your behalf",
+        "You hold a credit claim on the dealer denominated in ounces, backed by their gold holdings",
+        "Your gold is pooled with other customers' holdings in a segregated vault account"
+      ],
+      correct: 1,
+      explanation: "Allocated gold means specific bars are titled in your name. The dealer holds them on your behalf — you own the metal outright, not a claim on someone who owns metal."
+    },
+    {
+      q: "If your gold is held in an unallocated account and the dealer becomes insolvent, what are you?",
+      options: [
+        "A secured creditor with priority over the physical metal",
+        "The legal owner of the specific bars covering your balance",
+        "An unsecured creditor — your balance is a claim against the insolvent estate",
+        "Protected by Australian deposit guarantee arrangements"
+      ],
+      correct: 2,
+      explanation: "Unallocated accounts are a credit relationship. If the dealer fails, you join the queue of unsecured creditors. You do not own specific bars and cannot recover them ahead of other creditors."
+    },
+    {
+      q: "What does rehypothecation allow a dealer to do with unallocated gold?",
+      options: [
+        "Revalue the gold at current market rates each trading day",
+        "Lend or use it as collateral without your specific consent",
+        "Allocate specific bars to your account on request",
+        "Transfer ownership to you free of charge on account closure"
+      ],
+      correct: 1,
+      explanation: "Rehypothecation means the dealer can use the gold backing unallocated accounts for their own purposes — lending it, pledging it as collateral, or trading it. This is not possible with allocated gold."
+    },
+    {
+      q: "Which best describes the legal relationship in an allocated gold account?",
+      options: [
+        "The dealer owns the gold and guarantees its value to you",
+        "You and the dealer jointly own the gold in proportion to your balance",
+        "The dealer holds the gold as your agent — legal title remains with you",
+        "The gold is owned by the vault operator and leased to the dealer on your behalf"
+      ],
+      correct: 2,
+      explanation: "Allocated gold is held on bailment — the dealer is a custodian acting on your behalf. Legal title never passes to the dealer. The metal is yours; the dealer's role is safekeeping."
+    },
+    {
+      q: "Why is unallocated gold typically priced closer to spot than allocated?",
+      options: [
+        "Unallocated accounts are exempt from storage fees under LBMA rules",
+        "Large volumes can be transferred between accounts without moving physical metal",
+        "No specific bars are set aside. The ounces exist as a system balance, with no per-customer storage, insurance, or auditing cost",
+        "Allocated gold requires independent auditing that unallocated accounts avoid"
+      ],
+      correct: 2,
+      explanation: "Unallocated gold is not assigned to specific bars. It is a balance in a system — the physical metal may be in a pool, a refinery, or elsewhere. Because nothing is segregated to you specifically, there is no per-customer storage, insurance, or auditing overhead."
+    },
+    {
+      q: "An allocated account typically costs more than an unallocated one. Why?",
+      options: [
+        "Allocated accounts are taxed at a higher rate under Australian law",
+        "The dealer pays a premium to the vault operator for segregated storage",
+        "Physical storage, insurance, and auditing of specific bars have real costs",
+        "Allocated accounts require more frequent trading to maintain their value"
+      ],
+      correct: 2,
+      explanation: "Allocated gold requires a vault to physically store and secure your specific bars, insurance against loss or theft, and periodic auditing to confirm the bars are present. These costs are passed to the account holder."
+    },
+    {
+      q: "A dealer markets a product as 'physical gold' and 'fully backed.' Which question most directly establishes whether it is allocated or unallocated?",
+      options: [
+        "Is the gold stored in Australia or overseas?",
+        "Are specific bars vaulted and registered in my name?",
+        "Is the gold insured against theft and damage?",
+        "Can I take delivery within 30 days?"
+      ],
+      correct: 1,
+      explanation: "'Fully backed' and 'physical gold' are marketing terms that do not establish ownership. The only question that matters is whether specific bars are titled in your name. If not, you hold an unallocated credit claim regardless of how the product is described."
+    },
+    {
+      q: "You hold allocated gold at a dealer. Can the dealer lend or trade the metal in your account?",
+      options: [
+        "Yes, as long as equivalent bars are returned before your next statement",
+        "Yes, with a written guarantee on file",
+        "No. Allocated bars are your property and the dealer has no right to use them",
+        "Only with regulatory approval"
+      ],
+      correct: 2,
+      explanation: "Allocated gold is held for you in safekeeping. The dealer acts as custodian only — your bars cannot be lent, traded, or pledged. That is what separates allocated from unallocated."
+    },
+    {
+      q: "What is the primary risk that allocated gold eliminates compared to unallocated?",
+      options: [
+        "Price risk — allocated gold is insulated from spot price movements",
+        "Counterparty risk — if the dealer fails, allocated holders own specific bars outside the insolvent estate",
+        "Currency risk — allocated gold is priced in AUD rather than USD",
+        "Liquidity risk — allocated gold can always be sold within 24 hours"
+      ],
+      correct: 1,
+      explanation: "Counterparty risk is the risk that the other party in a financial arrangement fails. With allocated gold, there is no counterparty risk on the metal itself — the bars are yours, titled in your name, and sit outside the dealer's balance sheet."
+    },
+    {
+      q: "A prospectus reads: 'Your account balance is denominated in ounces and backed by the company's gold holdings.' Allocated or unallocated?",
+      options: [
+        "Allocated — the ounce denomination proves specific bars are assigned to you",
+        "Allocated — any product backed by physical metal is by definition allocated",
+        "Unallocated — the backing refers to the company's general holdings, not specific bars in your name",
+        "Cannot be determined without more information about the vault arrangement"
+      ],
+      correct: 2,
+      explanation: "The phrase 'backed by the company's gold holdings' describes the company's assets, not your ownership of specific bars. This is the language of an unallocated credit claim. Allocated gold would be described as 'specific bars held in your name' or 'titled to you.'"
+    }
+  ],
+  4: [
+    {
+      q: "Where were the earliest known gold coins minted, around 600 BCE?",
+      options: ["Egypt", "Rome", "Lydia (modern-day Turkey)", "Athens"],
+      correct: 2,
+      explanation: "The Lydian stater, struck from electrum (a gold-silver alloy), is the earliest known coin. Lydia was a kingdom in what is now western Turkey."
+    },
+    {
+      q: "Under the classical gold standard, what was the US dollar fixed at per troy ounce of gold?",
+      options: ["$15.67", "$20.67", "$35.00", "$42.22"],
+      correct: 1,
+      explanation: "The Gold Standard Act of 1900 fixed the US dollar at $20.67 per troy ounce. The rate of $35 was set later under Bretton Woods in 1944."
+    },
+    {
+      q: "What was the key tension that ultimately broke the Bretton Woods system?",
+      options: [
+        "The US ran out of physical gold mines",
+        "The US held far fewer gold reserves than the outstanding dollars held globally",
+        "Other countries refused to hold US dollars",
+        "Gold was discovered to be less pure than expected"
+      ],
+      correct: 1,
+      explanation: "As dollars flowed overseas through spending and trade deficits, the ratio of outstanding dollars to US gold reserves deteriorated — making the convertibility promise increasingly unsustainable."
+    },
+    {
+      q: "On what date did President Nixon announce the suspension of gold convertibility?",
+      options: ["3 March 1968", "15 August 1971", "7 January 1975", "12 September 1979"],
+      correct: 1,
+      explanation: "Nixon's announcement on 15 August 1971 — the 'Nixon shock' — ended the Bretton Woods system. Gold was freed to trade at market prices for the first time in the modern era."
+    },
+    {
+      q: "Approximately how much gold do the world's central banks hold in official reserves combined?",
+      options: ["5,000 tonnes", "15,000 tonnes", "35,000 tonnes", "90,000 tonnes"],
+      correct: 2,
+      explanation: "Central banks hold approximately 35,000 tonnes — around 17% of all above-ground gold ever mined. They hold it as a strategic reserve asset, not because they are legally required to."
+    },
+    {
+      q: "Roman, Byzantine, and Islamic gold coins all weighed roughly 4–4.5 grams, despite being minted centuries apart by unconnected empires. What does this tell us?",
+      options: [
+        "It was coincidental — different empires used the same crude scales",
+        "A practical weight had proven itself as a reliable unit of value across generations",
+        "Rome mandated the standard as a condition of trade with neighbouring states",
+        "Gold deposits across those regions naturally produced coins of similar size"
+      ],
+      correct: 1,
+      explanation: "The convergence was not coincidental or coordinated — it reflected independent discovery of the same truth: a coin's value came from its gold content, not the face stamped on it. A weight that worked in one empire worked everywhere, so it survived."
+    },
+    {
+      q: "A government on the gold standard wants to increase spending. What stops it from simply printing more money?",
+      options: [
+        "Parliament must approve all new currency issuance under gold standard law",
+        "It can print freely but must buy gold within 90 days to back the new notes",
+        "It cannot expand the money supply beyond its gold reserves without breaking convertibility",
+        "International treaty caps money supply growth at 3% per year"
+      ],
+      correct: 2,
+      explanation: "Every note in circulation had to be convertible into a fixed amount of gold on demand. Print more notes than you have gold and you can't honour that promise — the constraint was structural, not political."
+    },
+    {
+      q: "Why did most major economies abandon the gold standard during the 1930s?",
+      options: [
+        "Gold mining collapsed, shrinking global reserves below usable levels",
+        "Keynesian economists convinced governments it was theoretically flawed",
+        "Staying on gold forced tight money during a depression, making unemployment worse",
+        "The US pressured allies to move to a dollar-based system instead"
+      ],
+      correct: 2,
+      explanation: "The gold standard required governments to defend the exchange rate by tightening money — exactly the wrong response to a collapsing economy. Britain left in 1931, the US in 1933. The decision was driven by crisis, not theory."
+    },
+    {
+      q: "Under Bretton Woods, countries held US dollars rather than gold directly. What risk did this create?",
+      options: [
+        "Dollar weakness against other currencies meant reserve losses",
+        "More dollars circulated globally than the US held gold to redeem them",
+        "Countries couldn't access their reserves quickly in a crisis",
+        "The US could change the conversion rate unilaterally without notice"
+      ],
+      correct: 1,
+      explanation: "Countries trusted the US could convert their dollars to gold at $35/oz on demand. But dollar holdings kept growing as the US ran deficits, while gold reserves stayed fixed. By the late 1960s the promise was no longer credible — which is why Nixon suspended convertibility in 1971."
+    },
+    {
+      q: "After Nixon closed the gold window in 1971, gold rose from $35 to over $800/oz within a decade. What does this most directly suggest?",
+      options: [
+        "Gold's price had been artificially fixed at $35 for decades and markets were correcting back to fair value",
+        "The dollar's purchasing power fell sharply, contributing to broad inflation across commodities and hard assets",
+        "Nixon's decision triggered panic selling of US assets that reversed once markets stabilised",
+        "OPEC nations recycled petrodollar surpluses into gold, creating an artificial demand surge"
+      ],
+      correct: 1,
+      explanation: "The 1970s saw sharp dollar debasement and high inflation — gold's decade-long run reflected that broad loss of purchasing power, not just a technical price correction. Hard assets generally rose; gold rose most because it had no industrial ceiling on demand. C is wrong — gold didn't reverse. D contributed at the margin but wasn't the primary driver."
+    }
+  ]
+};
+
+const INLINE_ARTICLE_DATA = {
+  2: {
+    title: "How the Gold Spot Price Works",
+    trackTag: "🥉 Bronze Track · Article 2 of 5",
+    nextBtnLabel: "Next Article →",
+    nextBtnAction: "showArticle(3)",
+    sidebarNow: 2,
+    sections: [
+      {
+        heading: "What \"Spot Price\" Means",
+        html: `<p>The spot price of gold is the price for immediate delivery of the metal: one troy ounce of gold, to be delivered now, in a standardised form. It is quoted continuously during market hours and is the reference price on which virtually all gold transactions — physical and financial — are based.</p>
+<p>The word "spot" distinguishes this from futures or forward prices, which reflect contracts for delivery at a specified future date. Futures prices include a carry component and will typically differ from the spot price by a small margin. Most of the time, the futures price exceeds the spot price — a condition called <strong>contango</strong> — but the two prices converge as the delivery date approaches.</p>
+<p>For retail gold buyers, the spot price is the baseline. The price you pay to a dealer reflects the spot price at the time of the transaction, plus the dealer's margin, plus applicable premiums for fabrication, certification, or other costs.</p>`,
+        question: {
+          text: "What does \"spot price\" mean when buying gold?",
+          options: [
+            "The government-set benchmark published each morning",
+            "The current price for immediate delivery of one troy ounce",
+            "The dealer's purchase price before adding their margin",
+            "The average price across the past trading day"
+          ],
+          correct: 1,
+          explanation: "Spot price means the price right now, for immediate delivery. It is the live market price for one troy ounce of standardised gold, settled today rather than at a future date."
+        }
+      },
+      {
+        heading: "Where the Spot Price Is Set: The LBMA Benchmark",
+        html: `<p>The primary gold price benchmark in the world is the <strong>LBMA Gold Price</strong>, administered by the ICE Benchmark Administration (IBA) and set in the London market. London hosts the world's largest over-the-counter (OTC) gold market — the Loco London market. As of mid-2025, this market accounted for 51% of global gold trading volume by notional value.</p>
+<p>The LBMA Gold Price is published <strong>twice each day</strong>: at 10:30 AM London time (the AM fix) and 3:00 PM London time (the PM fix). Both are denominated in US dollars per troy ounce. The PM fix is the most widely used reference price for settlement of gold transactions globally.</p>
+<p>This twice-daily benchmark replaced the older "London Gold Fix," a telephone-based process in operation since 1919. The reform took effect on <strong>19 March 2015</strong>, when IBA assumed administration and introduced an electronic auction process in its place. The fixing is not a price set by committee — it is a market-clearing price discovered through iterative bidding, where buy and sell volumes are balanced electronically.</p>`,
+        question: {
+          text: "How often is the LBMA Gold Price published, and which is the primary global settlement reference?",
+          options: [
+            "Once daily, the London close at 4:00 PM",
+            "Twice daily, with the PM fix at 3:00 PM London as primary",
+            "Twice daily, with the AM fix at 10:30 AM as primary",
+            "Continuously, updating in real time like a share price"
+          ],
+          correct: 1,
+          explanation: "The LBMA Gold Price is set twice a day. The PM fix at 3:00 PM London time is the primary global settlement reference, used for ETFs, forward contracts, mining sales, and central bank transactions."
+        }
+      },
+      {
+        heading: "The Role of COMEX",
+        html: `<p>While the LBMA Gold Price serves as the global settlement benchmark, the most actively traded gold market by futures volume is <strong>COMEX</strong> — the Commodity Exchange Inc., now a division of CME Group in New York. Established in 1933, it merged with the New York Mercantile Exchange in 1996 and joined CME Group in 2008.</p>
+<p>The COMEX gold futures contract (ticker: GC) is the global standard: one contract represents <strong>100 troy ounces</strong> of gold, with a minimum price movement of <strong>$0.10 per troy ounce</strong>. COMEX and the LBMA together dominate global gold price discovery. Academic research finds they act as "net spillover spreaders" — they transmit price information to other markets rather than primarily receiving it.</p>
+<p>The relationship between COMEX futures prices and the LBMA spot price is close and continuous. Arbitrage mechanisms — professional traders simultaneously buying and selling in different markets to capture price discrepancies — keep the two prices aligned. When futures and spot prices diverge meaningfully, traders act to close the gap.</p>`,
+        question: {
+          text: "What does one standard COMEX gold futures contract represent?",
+          options: [
+            "50 troy ounces of gold",
+            "100 troy ounces of gold",
+            "400 troy ounces of gold",
+            "1,000 troy ounces of gold"
+          ],
+          correct: 1,
+          explanation: "The standard COMEX GC contract is 100 troy ounces. It is the benchmark futures contract for gold globally, with a minimum price movement of $0.10 per ounce."
+        }
+      },
+      {
+        heading: "The Role of Shanghai",
+        html: `<p>The <strong>Shanghai Gold Exchange (SGE)</strong> is a significant and growing part of the global picture. Founded in 2002, it became the largest commodity exchange in China for precious metals trading. Despite its size, the academic evidence is clear: the SGE remains a price-taker rather than a price-setter.</p>
+<p>Research by Qian (2020), examining price spillover between COMEX, the LBMA, and the SGE, found that "even with the increasing market influence of SGE, it still remains an isolated market" relative to New York and London. The SGE responds to price signals from London and New York — it does not yet generate them.</p>
+<p>This may change. SGE launched a yuan-denominated gold benchmark on 19 April 2016, a significant step toward internationalising China's gold market. Whether the SGE eventually becomes a co-equal price-setting venue alongside COMEX and the LBMA is an open question. As of the current research literature, the London–New York axis remains dominant.</p>`,
+        question: {
+          text: "Why do COMEX and the LBMA dominate global gold price discovery rather than the SGE?",
+          options: [
+            "The SGE only trades in yuan, limiting its global reach",
+            "SGE trading hours don't overlap with London or New York",
+            "COMEX and LBMA have far greater trading volumes and deeper liquidity",
+            "Chinese regulations prevent foreign institutions from accessing the SGE"
+          ],
+          correct: 2,
+          explanation: "COMEX and the LBMA dominate because of the depth of global institutional participation and trading volume. Research by Qian (2020) found that price information flows from New York and London to Shanghai, not the other way around."
+        }
+      },
+      {
+        heading: "A 24-Hour Market",
+        html: `<p>Unlike most commodity markets, the global gold market effectively operates 24 hours a day. When the London market opens, New York is overnight. When New York is trading, London has set its PM benchmark. The Asia session — centred on Hong Kong, Singapore, and Shanghai — bridges the overnight gap.</p>
+<p>This means the gold price you see at any moment reflects the most recent trade in whichever market is most active at that time. The LBMA benchmark is a twice-daily point-in-time reference. Between benchmarks, the working price is determined by OTC trading between banks, dealers, and institutional participants across time zones.</p>
+<p>For investors, the practical consequence is straightforward: the gold price is always live in some market. The price on an Australian website at midnight may reflect trading in London or New York, depending on the hour.</p>`,
+        question: {
+          text: "Gold prices update continuously on Australian websites, even at midnight. Why?",
+          options: [
+            "The LBMA publishes hourly price updates overnight",
+            "The SGE operates during Australian nighttime hours",
+            "Gold markets run 24 hours across London, New York, and Asia",
+            "Dealers set their own prices independent of the global market"
+          ],
+          correct: 2,
+          explanation: "Gold has no closing bell. OTC trading continues across time zones, so the price is always live in some market. At Australian midnight, New York is in its afternoon session and London is approaching its morning."
+        }
+      },
+      {
+        heading: "How the Price Reaches Australian Buyers",
+        html: `<p>The global gold spot price is quoted in US dollars per troy ounce. Australian buyers see gold quoted in Australian dollars, and that translation introduces a second variable: the AUD/USD exchange rate.</p>
+<p>The price an Australian investor pays reflects three things: the LBMA spot price (or most recent market price, if between benchmarks) in USD per troy ounce; that figure converted at the prevailing AUD/USD exchange rate to produce an AUD price; and the dealer's margin on top.</p>
+<p>This means the AUD price of gold can move for two distinct and independent reasons: because the gold price in USD has changed, or because the Australian dollar has strengthened or weakened against the US dollar. A falling AUD raises the AUD gold price even if gold is flat in USD terms. The two variables are independent sources of movement in the price an Australian buyer observes.</p>
+<div class="highlight-box">The AUD/USD exchange rate is a second lever on the gold price for Australian investors — one that has nothing to do with gold fundamentals. Understanding which lever is driving a given price move matters for interpreting what the market is telling you.</div>`,
+        question: {
+          text: "Gold falls 1% in USD, but the AUD weakens 2% against the USD. What happens to the AUD gold price?",
+          options: [
+            "It falls 1%, matching the USD move",
+            "It falls 3%, adding both movements",
+            "It stays flat, as the two movements offset each other",
+            "It rises slightly"
+          ],
+          correct: 3,
+          explanation: "AUD gold price = USD gold price divided by the AUD/USD rate. Gold down 1% in USD, but AUD down 2%, means the net AUD gold price rises roughly 1%. The two variables are independent and can move in opposite directions."
+        }
+      }
+    ],
+    capstone: [
+      {
+        text: "Why did the LBMA Gold Price switch to electronic administration in 2015?",
+        options: [
+          "London banks wanted to reduce their operational costs",
+          "The old phone-based fixing was vulnerable to manipulation",
+          "The fix needed to move from sterling to USD denomination",
+          "Asian markets demanded real-time pricing access"
+        ],
+        correct: 1,
+        explanation: "The 2015 reform replaced the telephone-based Gold Fix, in operation since 1919, with IBA's electronic auction. The change addressed concerns about the old system's vulnerability to manipulation, similar to reforms in other financial benchmarks at the time."
+      },
+      {
+        text: "What keeps COMEX futures prices and the LBMA spot price closely aligned?",
+        options: [
+          "A formal treaty caps the maximum allowed spread",
+          "The two markets open and close at identical times",
+          "Central banks intervene when prices diverge",
+          "Traders arbitrage any gap, buying cheap and selling dear"
+        ],
+        correct: 3,
+        explanation: "Arbitrage closes gaps between COMEX and the LBMA in seconds. When a price difference appears, traders buy in the cheaper market and sell in the dearer one simultaneously. No formal agreement is needed; profit motive does the work."
+      },
+      {
+        text: "Two dealers quote the same spot reference. What determines which is actually cheaper?",
+        options: [
+          "Which vault their gold is stored in",
+          "Whether they use the AM or PM fix",
+          "The total cost per ounce, including all fees",
+          "Their GST registration status"
+        ],
+        correct: 2,
+        explanation: "Spot price excludes fabrication costs, dealer margins, storage, and insurance. Two dealers quoting the same spot can still have very different all-in prices. The only valid comparison is total cost per ounce."
+      }
+    ]
+  },
+  5: {
+    title: "Gold vs Silver: Two Precious Metals, Two Different Assets",
+    trackTag: "🥉 Bronze Track · Article 5 of 5",
+    nextBtnLabel: "Back to Track →",
+    nextBtnAction: "showTrack()",
+    sidebarNow: 5,
+    sections: [
+      {
+        heading: "Physical Properties: What Makes Each Metal Distinctive",
+        html: `<p>Gold and silver share several physical properties that made them suitable for monetary use throughout history: both are relatively rare, chemically stable, and malleable enough to be shaped into coins and bars.</p>
+<p>Their differences matter more. Gold's defining characteristic is its extraordinary chemical inertness — it does not corrode, tarnish, or oxidise under any normal conditions. A gold bar buried for three thousand years is chemically identical to one minted yesterday. This is why virtually all the gold ever mined still exists above ground in some form.</p>
+<p>Silver does tarnish — it reacts with sulphur compounds in the air to form silver sulphide, the dark patina on old silverware. More significantly, silver is consumed in industrial processes in ways that gold is not. When silver is used in a solar panel or circuit board, the metal is typically dispersed and not recovered. Silver is used up in industrial applications. Gold, almost never is.</p>
+<p>Silver also has properties gold lacks: it is the best electrical conductor of all metals, the best thermal conductor, and has documented antimicrobial properties. These drive its industrial demand in ways that have no real equivalent for gold.</p>`,
+        question: {
+          text: "What is the most significant physical difference between gold and silver for long-term investors?",
+          options: [
+            "Gold is denser, so it stores more value per kilogram than silver",
+            "Gold is chemically inert; silver tarnishes and is consumed in industrial use",
+            "Silver is rarer in the earth's crust, giving it a higher scarcity premium",
+            "Gold has better electrical conductivity, driving its industrial demand"
+          ],
+          correct: 1,
+          explanation: "Gold's chemical inertness means virtually all gold ever mined still exists. Silver tarnishes and is consumed in industrial processes — dispersed into products like solar panels and circuit boards where it cannot be recovered. This consumption dynamic has no parallel in gold."
+        }
+      },
+      {
+        heading: "Supply: By-Product vs Primary",
+        html: `<p>The most structurally important difference between the two metals is how they are produced.</p>
+<p>Gold is primarily a primary commodity — the economics of a gold mine are driven by the gold price. When gold rises, mines become more profitable, exploration increases, and production eventually responds. When gold falls, marginal mines close.</p>
+<p>Silver is predominantly a by-product of mining other metals. According to the Silver Institute's World Silver Survey 2025, silver production from lead and zinc mines is the single largest source of global silver output. The leading silver-producing countries — Mexico, China, Peru, Bolivia, and Chile — produce silver largely as a function of base metals economics, not the silver price specifically. When global demand for lead and zinc slows, silver output tends to fall with it, regardless of what silver prices are doing.</p>
+<p>Global silver mine production reached 819.7 million ounces in 2024. For context, gold mine production runs approximately 109 million ounces annually — meaning silver is produced at roughly eight times the volume of gold by weight, yet it trades at a persistent discount far larger than that production-weight ratio would suggest.</p>`,
+        question: {
+          text: "Why does higher silver demand not necessarily bring more silver supply?",
+          options: [
+            "Silver refineries have strict government output quotas",
+            "Silver mining is controlled by a small cartel of producers",
+            "Silver exploration takes a decade before new mines can produce",
+            "Most silver is a by-product of lead and zinc mines, so output follows base metal economics"
+          ],
+          correct: 3,
+          explanation: "Because most silver is produced as a side effect of lead and zinc mining, silver production follows base metals economics rather than the silver price. A silver price spike does not trigger new silver mines the way a gold price spike triggers gold exploration."
+        }
+      },
+      {
+        heading: "Demand: Industrial Metal vs Monetary Asset",
+        html: `<p>The most consequential difference for investors is the demand profile of each metal.</p>
+<p>For gold, demand breaks broadly into jewellery (approximately half), investment and central bank purchases (approximately a third), and industrial/technology use (approximately a tenth). The dominant demand categories treat gold as a store of value and monetary asset. Industrial demand for gold exists — microelectronics, dentistry — but does not drive the price.</p>
+<p>Silver's demand structure is fundamentally different. Industrial demand has consistently accounted for more than half of total annual silver demand, and that share is still growing. The Silver Institute's World Silver Survey 2025 reported that industrial demand reached a new record in 2024, driven by electronics, photovoltaic (solar panel) manufacturing, automotive applications, and grid infrastructure. AI-related applications added further demand.</p>
+<p>Solar panels alone are now a major driver: each photovoltaic cell contains silver paste that conducts electricity, and cumulative demand across millions of installations is substantial. Electric vehicles, 5G infrastructure, and emerging AI hardware also consume silver. These uses make silver increasingly a technology metal — in addition to its role as a precious metal and investment vehicle.</p>
+<div class="highlight-box">Silver's industrial demand means its price responds to the global economic cycle in ways gold's does not. Strong growth drives demand from solar, EVs, and electronics. A recession suppresses it.</div>`,
+        question: {
+          text: "What share of total silver demand does industrial use account for?",
+          options: [
+            "More than half — and the share is still growing",
+            "Around one in four ounces — a growing minority",
+            "About one in ten — similar to gold's small industrial share",
+            "Almost none — investment demand now dominates"
+          ],
+          correct: 0,
+          explanation: "Industrial demand has consistently accounted for more than half of all silver demand, and it reached a new record in 2024. By comparison, industrial use accounts for roughly 10% of gold demand. This structural difference is the most consequential for understanding how each metal behaves."
+        }
+      },
+      {
+        heading: "Price Behaviour: Volatility and the Safe Haven Gap",
+        html: `<p>Silver is considerably more volatile than gold. Its price can move 30–50% within a calendar year in either direction, while gold's movements, though significant, tend to be less extreme. This reflects silver's smaller market size and its sensitivity to industrial demand.</p>
+<p>Gold's safe haven properties — its tendency to rise when equity markets fall sharply, or to hold value during financial crises — derive from its monetary and store-of-value characteristics. When economies contract, investment demand for gold tends to hold or increase, even as industrial demand softens. The net effect is a resilience gold has historically demonstrated.</p>
+<p>Silver does not consistently share this profile. During the Global Financial Crisis of 2008–2009, gold rose 21% in US dollar terms from December 2007 to February 2009. Silver declined significantly before recovering. The industrial demand component — which falls in economic downturns — can more than offset any increase in safe haven investment demand during crises.</p>
+<p>In practice, silver tends to amplify gold's movements rather than provide independent protection: it rises more than gold in precious metals bull markets and falls more sharply in downturns. The academic research that established gold's safe haven properties (Baur and Lucey 2010; Baur and McDermott 2010) does not extend the same conclusion to silver.</p>`,
+        question: {
+          text: "During the 2008–2009 Global Financial Crisis, how did gold and silver behave?",
+          options: [
+            "Both metals rose by roughly the same amount",
+            "Silver rose more than gold, amplifying precious metals' safe haven appeal",
+            "Gold rose 21% while silver declined, showing silver lacks gold's crisis protection",
+            "Both fell, with silver recovering faster due to industrial demand"
+          ],
+          correct: 2,
+          explanation: "Gold rose 21% from December 2007 to February 2009 while silver declined. The industrial demand component of silver — which falls in recessions — more than offset any safe haven buying. Silver amplifies gold's moves in both directions rather than providing independent crisis protection."
+        }
+      },
+      {
+        heading: "The Gold/Silver Ratio",
+        html: `<p>The gold/silver ratio — how many ounces of silver it takes to buy one ounce of gold — is one of the most widely watched relationships in precious metals markets.</p>
+<p>When both metals served as monetary instruments, the ratio was defined by law or convention, typically in the range of 15:1 to 16:1. This reflected their relative scarcity in an era when both circulated as money and central banks held both as reserves.</p>
+<p>As gold maintained its monetary role longer through the twentieth century and ultimately became the reserve asset of central banks worldwide, while silver transitioned primarily to industrial use, the ratio shifted dramatically. Modern ratios of 70:1 to 90:1 reflect this structural divergence: gold retains a premium reflecting its persistent role as a reserve asset, while silver's price is increasingly determined by industrial supply and demand dynamics.</p>
+<p>The ratio is sometimes used by precious metals traders as a timing signal — buy silver when the ratio is high, sell when it is low. Whether this reliably produces returns is a separate question. Understanding why the ratio sits at its current level is the starting point for evaluating it.</p>`,
+        question: {
+          text: "Why has the gold/silver ratio shifted from around 15:1 historically to 70–90:1 today?",
+          options: [
+            "A major silver discovery has made silver far more abundant relative to gold",
+            "Gold retained its reserve asset role while silver transitioned to industrial use",
+            "Government price controls have artificially depressed silver since the 1970s",
+            "Silver's tarnishing problem led institutional investors to prefer gold"
+          ],
+          correct: 1,
+          explanation: "When both metals were monetary instruments, the ratio was 15:1 by law or convention. Gold retained its reserve asset role through the twentieth century — central banks still hold roughly 35,000 tonnes today. Silver transitioned to primarily industrial use. The ratio shift reflects that structural divergence."
+        }
+      },
+      {
+        heading: "Physical Storage: A Practical Difference",
+        html: `<p>For investors buying physical metal, the storage implications of gold versus silver differ practically and significantly.</p>
+<p>At a gold/silver price ratio of 80:1, one troy ounce of gold is worth eighty troy ounces of silver. A kilogram of gold — approximately 32 troy ounces — at that ratio is equivalent in value to approximately 2,600 troy ounces of silver, weighing roughly 80 kilograms. The density difference amplifies this further: silver is less dense than gold, so equivalent value in silver also occupies significantly more physical volume.</p>
+<p>Storing meaningful value in physical silver therefore requires substantially more physical space and weight than storing equivalent value in gold. This has direct implications for vault costs, insurance, and logistics. The economics of physical silver storage are meaningfully different from physical gold — a consideration that affects the all-in cost of holding each metal.</p>
+<p>This is not an argument for or against silver as an investment. It is a practical constraint that investors should understand before comparing physical silver to physical gold as equivalent delivery options.</p>`,
+        question: {
+          text: "At an 80:1 gold/silver price ratio, roughly how much does the silver equivalent of 1 kilogram of gold weigh?",
+          options: [
+            "About 8 kilograms — slightly bulkier per unit of value",
+            "About 30 kilograms — significant but manageable for most investors",
+            "About 50 kilograms — roughly the weight of a large bag of concrete",
+            "About 80 kilograms — substantially more vault space and handling cost"
+          ],
+          correct: 3,
+          explanation: "A kilogram of gold equals roughly 32 troy ounces. At an 80:1 ratio, that is equivalent to about 2,600 troy ounces of silver — approximately 80 kilograms. Silver's lower density means it also takes up more volume per unit of value. Physical storage economics are fundamentally different for the two metals."
+        }
+      }
+    ],
+    capstone: [
+      {
+        text: "Why does silver tend to fall during financial crises, even when gold rises?",
+        options: [
+          "Silver is traded on smaller exchanges with less institutional liquidity",
+          "Industrial demand for silver falls in recessions, overwhelming any safe haven buying",
+          "Silver has no central bank demand to provide a price floor during crises",
+          "Silver's by-product supply structure means it cannot respond to price signals"
+        ],
+        correct: 1,
+        explanation: "Silver's demand is more than half industrial. When economies contract, industrial activity falls — solar installations slow, electronics demand drops, automotive output falls. This industrial demand destruction more than offsets any increase in safe haven buying, which is why silver fell while gold rose during the 2008–2009 crisis."
+      },
+      {
+        text: "An investor buys physical silver expecting it to protect their portfolio during the next market downturn. What does this article suggest they should expect?",
+        options: [
+          "Silver should perform similarly to gold because both metals are classed as precious",
+          "Silver should outperform gold because its industrial supply constraint drives prices up in crises",
+          "Silver may underperform expectations because its industrial demand falls when economic conditions deteriorate",
+          "Silver's safe haven case is stronger than gold's when held in physical form"
+        ],
+        correct: 2,
+        explanation: "The academic research that established gold's safe haven properties does not extend to silver. During the 2008–2009 GFC, gold rose 21% while silver declined. The industrial demand component, which represents more than half of silver demand, falls in recessions. An investor expecting gold-like crisis behaviour from silver is likely to be disappointed."
+      },
+      {
+        text: "The gold/silver ratio is currently 85:1. A trader argues this is historically high and therefore silver is undervalued. What does this article suggest about that reasoning?",
+        options: [
+          "The current ratio reflects a structural shift — gold retained monetary status while silver became industrial",
+          "The trader is correct — ratios above 70:1 historically signal a silver buying opportunity",
+          "The ratio is irrelevant because both metals now behave as pure commodities",
+          "The ratio will revert to 15:1 as central banks begin accumulating silver reserves"
+        ],
+        correct: 0,
+        explanation: "The historical 15:1 ratio existed when both metals served as monetary instruments. The shift to 70–90:1 reflects a structural change: gold retained its reserve asset role and central banks still hold tens of thousands of tonnes, while silver transitioned to industrial use. Comparing today's ratio to historical monetary-era ratios conflates two different market structures."
+      }
+    ]
+  }
+};
+
+let currentArticle = 4;
+let currentQ = 0;
+let score = 0;
+let answered = false;
+let totalPoints = 47;
+let quizSubmitted = { 3: false, 4: false, 'article2': false, 'article5': false };
+let inlineState = {
+  2: {
+    sectionStatus: ['open','locked','locked','locked','locked','locked'],
+    sectionFirstAttempt: [true,true,true,true,true,true],
+    capstoneIndex: 0,
+    capstoneFirstAttempt: [true,true,true],
+    capstoneComplete: false,
+    pointsEarned: 0
+  },
+  5: {
+    sectionStatus: ['open','locked','locked','locked','locked','locked'],
+    sectionFirstAttempt: [true,true,true,true,true,true],
+    capstoneIndex: 0,
+    capstoneFirstAttempt: [true,true,true],
+    capstoneComplete: false,
+    pointsEarned: 0
+  }
+};
+
+// ── navigation ─────────────────────────────────────────
+function showHome()  { switchView('view-home'); }
+function showTrack() { switchView('view-track'); }
+
+function showArticle(n) {
+  if (n !== undefined) currentArticle = n;
+  const art = ARTICLES[currentArticle];
+
+  // Breadcrumb
+  document.getElementById('article-breadcrumb-current').textContent = art.title;
+
+  // Header
+  document.getElementById('article-track-tag-el').textContent = '🥉 ' + art.trackTag;
+  document.getElementById('article-h1-el').textContent = art.title;
+  document.getElementById('article-read-time').textContent = art.readTime;
+
+  // Body
+  document.getElementById('article-body-el').innerHTML = art.html;
+
+  // Sidebar
+  const sidebarEl = document.getElementById('article-sidebar-items');
+  sidebarEl.innerHTML = '';
+  art.sidebar.forEach(function(item) {
+    const div = document.createElement('div');
+    div.className = 'sidebar-item';
+    const dotContent = item.state === 'done' ? '✓' : (item.state === 'now' ? '●' : '');
+    div.innerHTML =
+      '<div class="sidebar-dot ' + item.state + '">' + dotContent + '</div>' +
+      '<div class="sidebar-item-label' + (item.state === 'now' ? ' now' : '') + '">' + item.label + '</div>';
+    sidebarEl.appendChild(div);
+  });
+
+  // Quiz breadcrumb in quiz view
+  document.getElementById('quiz-breadcrumb-article').textContent = art.title;
+
+  switchView('view-article');
+}
+
+function renderInlineArticleContent() {
+  var data = INLINE_ARTICLE_DATA[currentArticle];
+  var state = inlineState[currentArticle];
+  var wrap = document.getElementById('inline-sections-wrap');
+  wrap.innerHTML = '';
+
+  data.sections.forEach(function(sec, i) {
+    var status = state.sectionStatus[i];
+    var div = document.createElement('div');
+    div.className = 'inline-section ' + status;
+    div.id = 'inline-sec-' + i;
+
+    var numContent = status === 'complete' ? '✓' : (i + 1);
+    var statusText = status === 'complete' ? '✓ Complete' : (status === 'open' ? 'In progress' : 'Locked');
+
+    var bodyHtml = '';
+    if (status !== 'locked') {
+      var display = status === 'complete' ? 'style="display:none"' : '';
+      bodyHtml = '<div class="inline-section-body" id="inline-body-' + i + '" ' + display + '>' +
+        '<div class="article-body">' + sec.html + '</div>';
+      if (status === 'open') {
+        bodyHtml += renderInlineQuestion(i, sec.question);
+      }
+      bodyHtml += '</div>';
+    }
+
+    var clickHandler = status === 'complete' ? ' onclick="toggleInlineSection(' + i + ')"' : '';
+    div.innerHTML =
+      '<div class="inline-section-header"' + clickHandler + '>' +
+        '<span class="inline-sec-num">' + numContent + '</span>' +
+        '<span class="inline-sec-title">' + sec.heading + '</span>' +
+        '<span class="inline-sec-status">' + statusText + '</span>' +
+      '</div>' +
+      bodyHtml;
+
+    wrap.appendChild(div);
+  });
+
+  var allComplete = state.sectionStatus.every(function(s) { return s === 'complete'; });
+  var capstoneEl = document.getElementById('inline-capstone');
+  var completeEl = document.getElementById('inline-complete-card');
+
+  if (state.capstoneComplete) {
+    capstoneEl.style.display = 'none';
+    completeEl.style.display = 'block';
+    document.getElementById('inline-complete-score').textContent =
+      'You scored ' + state.pointsEarned + ' out of 18 points.';
+  } else if (allComplete) {
+    renderCapstoneQ();
+    capstoneEl.style.display = 'block';
+    completeEl.style.display = 'none';
+  } else {
+    capstoneEl.style.display = 'none';
+    completeEl.style.display = 'none';
+  }
+}
+
+function showInlineArticle(n) {
+  if (n !== undefined) currentArticle = n;
+  var meta = INLINE_ARTICLE_DATA[currentArticle];
+  document.getElementById('inline-breadcrumb-current').textContent = meta.title;
+  document.getElementById('inline-track-tag').textContent = meta.trackTag;
+  document.getElementById('inline-article-h1').textContent = meta.title;
+  var completeBtn = document.getElementById('inline-complete-btn');
+  completeBtn.textContent = meta.nextBtnLabel;
+  completeBtn.onclick = new Function(meta.nextBtnAction);
+  // Update sidebar dots
+  var now = meta.sidebarNow;
+  for (var i = 1; i <= 5; i++) {
+    var dot = document.getElementById('inline-sd-' + i);
+    var lbl = document.getElementById('inline-sl-' + i);
+    if (!dot) continue;
+    dot.className = 'sidebar-dot';
+    dot.textContent = '';
+    if (lbl) lbl.className = 'sidebar-item-label';
+    if (i < now) { dot.classList.add('done'); dot.textContent = '✓'; }
+    else if (i === now) { dot.classList.add('now'); dot.textContent = '●'; if (lbl) lbl.classList.add('now'); }
+    else { dot.classList.add('next'); }
+  }
+  renderInlineArticleContent();
+  switchView('view-article-inline');
+}
+
+function renderInlineQuestion(sectionIdx, q) {
+  var letters = ['A','B','C','D'];
+  var opts = '';
+  q.options.forEach(function(opt, i) {
+    opts += '<button class="iq-option" onclick="selectInlineAnswer(' + sectionIdx + ',' + i + ',this)">' +
+      '<span class="iq-option-letter">' + letters[i] + '</span>' + opt +
+    '</button>';
+  });
+  return '<div class="inline-question" id="iq-' + sectionIdx + '">' +
+    '<div class="iq-label">Section Question</div>' +
+    '<p class="iq-text">' + q.text + '</p>' +
+    '<div class="iq-options" id="iq-opts-' + sectionIdx + '">' + opts + '</div>' +
+    '<div class="iq-feedback" id="iq-fb-' + sectionIdx + '"></div>' +
+  '</div>';
+}
+
+function toggleInlineSection(idx) {
+  var body = document.getElementById('inline-body-' + idx);
+  if (!body) return;
+  body.style.display = body.style.display === 'none' ? 'block' : 'none';
+}
+
+function selectInlineAnswer(sectionIdx, optionIdx, btn) {
+  var data = INLINE_ARTICLE_DATA[currentArticle];
+  var state = inlineState[currentArticle];
+  var q = data.sections[sectionIdx].question;
+
+  var opts = document.querySelectorAll('#iq-opts-' + sectionIdx + ' .iq-option');
+  opts.forEach(function(o) { o.classList.add('iq-revealed'); });
+
+  var fb = document.getElementById('iq-fb-' + sectionIdx);
+
+  if (optionIdx === q.correct) {
+    btn.classList.add('iq-correct');
+    fb.className = 'iq-feedback iq-correct-fb';
+    fb.innerHTML = '<strong>✓ Correct.</strong> ' + q.explanation;
+    fb.style.display = 'block';
+    var pts = state.sectionFirstAttempt[sectionIdx] ? 2 : 1;
+    state.pointsEarned += pts;
+    state.sectionFirstAttempt[sectionIdx] = false;
+    setTimeout(function() { advanceSection(sectionIdx); }, 1500);
+  } else {
+    btn.classList.add('iq-wrong');
+    opts[q.correct].classList.add('iq-show-correct');
+    fb.className = 'iq-feedback iq-wrong-fb';
+    fb.innerHTML = '<strong>✗ Not quite.</strong> ' + q.explanation;
+    fb.style.display = 'block';
+    state.sectionFirstAttempt[sectionIdx] = false;
+    setTimeout(function() {
+      opts.forEach(function(o) {
+        o.classList.remove('iq-revealed','iq-correct','iq-wrong','iq-show-correct');
+      });
+      fb.style.display = 'none';
+      fb.className = 'iq-feedback';
+    }, 2000);
+  }
+}
+
+function advanceSection(sectionIdx) {
+  var state = inlineState[currentArticle];
+  var data = INLINE_ARTICLE_DATA[currentArticle];
+  state.sectionStatus[sectionIdx] = 'complete';
+  var nextIdx = sectionIdx + 1;
+  if (nextIdx < data.sections.length) {
+    state.sectionStatus[nextIdx] = 'open';
+  }
+  renderInlineArticleContent();
+  setTimeout(function() {
+    var target = nextIdx < data.sections.length
+      ? document.getElementById('inline-sec-' + nextIdx)
+      : document.getElementById('inline-capstone');
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
+}
+
+function renderCapstoneQ() {
+  var state = inlineState[currentArticle];
+  var data = INLINE_ARTICLE_DATA[currentArticle];
+  var q = data.capstone[state.capstoneIndex];
+  var letters = ['A','B','C','D'];
+  var opts = '';
+  q.options.forEach(function(opt, i) {
+    opts += '<button class="capstone-option" onclick="selectCapstoneAnswer(' + i + ',this)">' +
+      '<span class="cap-option-letter">' + letters[i] + '</span>' + opt +
+    '</button>';
+  });
+  document.getElementById('capstone-q-wrap').innerHTML =
+    '<div class="capstone-progress">Question ' + (state.capstoneIndex + 1) + ' of 3</div>' +
+    '<p class="capstone-q-text">' + q.text + '</p>' +
+    '<div class="capstone-options" id="cap-opts">' + opts + '</div>' +
+    '<div class="capstone-feedback" id="cap-fb"></div>';
+}
+
+function selectCapstoneAnswer(optionIdx, btn) {
+  var state = inlineState[currentArticle];
+  var data = INLINE_ARTICLE_DATA[currentArticle];
+  var q = data.capstone[state.capstoneIndex];
+
+  var opts = document.querySelectorAll('#cap-opts .capstone-option');
+  opts.forEach(function(o) { o.classList.add('cap-revealed'); });
+
+  var fb = document.getElementById('cap-fb');
+
+  if (optionIdx === q.correct) {
+    btn.classList.add('cap-correct');
+    fb.className = 'capstone-feedback cap-correct-fb';
+    fb.innerHTML = '<strong>✓ Correct.</strong> ' + q.explanation;
+    fb.style.display = 'block';
+    var pts = state.capstoneFirstAttempt[state.capstoneIndex] ? 2 : 1;
+    state.pointsEarned += pts;
+    if (state.capstoneIndex < 2) {
+      setTimeout(function() {
+        state.capstoneIndex++;
+        renderCapstoneQ();
+      }, 1500);
+    } else {
+      setTimeout(function() { showArticleComplete(); }, 1500);
+    }
+  } else {
+    btn.classList.add('cap-wrong');
+    opts[q.correct].classList.add('cap-show-correct');
+    fb.className = 'capstone-feedback cap-wrong-fb';
+    fb.innerHTML = '<strong>✗ Not quite.</strong> ' + q.explanation;
+    fb.style.display = 'block';
+    state.capstoneFirstAttempt[state.capstoneIndex] = false;
+    setTimeout(function() {
+      opts.forEach(function(o) {
+        o.classList.remove('cap-revealed','cap-correct','cap-wrong','cap-show-correct');
+      });
+      fb.style.display = 'none';
+      fb.className = 'capstone-feedback';
+    }, 2000);
+  }
+}
+
+function showArticleComplete() {
+  var state = inlineState[currentArticle];
+  var key = 'article' + currentArticle;
+  state.capstoneComplete = true;
+  if (!quizSubmitted[key]) {
+    totalPoints += state.pointsEarned;
+    quizSubmitted[key] = true;
+    document.getElementById('nav-points').textContent = '⚡ ' + totalPoints + ' pts';
+  }
+  document.getElementById('inline-capstone').style.display = 'none';
+  if (currentArticle === 5) {
+    document.getElementById('btc-pts').textContent = totalPoints;
+    document.getElementById('bronze-track-complete').style.display = 'block';
+    setTimeout(function() {
+      document.getElementById('bronze-track-complete').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  } else {
+    document.getElementById('inline-complete-score').textContent =
+      'You scored ' + state.pointsEarned + ' out of 18 points.';
+    document.getElementById('inline-complete-card').style.display = 'block';
+    setTimeout(function() {
+      document.getElementById('inline-complete-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }
+}
+
+function showQuiz() {
+  currentQ = 0;
+  score = 0;
+  answered = false;
+  renderQuestion();
+  switchView('view-quiz');
+}
+
+function switchView(id) {
+  document.querySelectorAll('.view').forEach(function(v) { v.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ── quiz logic ─────────────────────────────────────────
+function renderQuestion() {
+  const QUESTIONS = QUIZ_DATA[currentArticle];
+  const d = QUESTIONS[currentQ];
+  answered = false;
+  document.getElementById('quiz-bar').style.width = (currentQ / QUESTIONS.length * 100) + '%';
+  document.getElementById('quiz-q-label').textContent = 'Question ' + (currentQ + 1) + ' of ' + QUESTIONS.length;
+  document.getElementById('quiz-question').textContent = d.q;
+  document.getElementById('quiz-feedback').style.display = 'none';
+  document.getElementById('quiz-next-btn').style.display = 'none';
+
+  const optWrap = document.getElementById('quiz-options');
+  optWrap.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  d.options.forEach(function(opt, i) {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.innerHTML = '<span class="option-letter">' + letters[i] + '</span>' + opt;
+    btn.onclick = function() { selectAnswer(i, btn); };
+    optWrap.appendChild(btn);
+  });
+}
+
+function selectAnswer(idx, btn) {
+  if (answered) return;
+  answered = true;
+  const QUESTIONS = QUIZ_DATA[currentArticle];
+  const d = QUESTIONS[currentQ];
+  const opts = document.querySelectorAll('.quiz-option');
+  opts.forEach(function(o) { o.classList.add('revealed'); });
+
+  const fb = document.getElementById('quiz-feedback');
+  if (idx === d.correct) {
+    score++;
+    btn.classList.add('correct-ans');
+    fb.className = 'quiz-feedback correct-fb';
+    fb.style.display = 'block';
+    fb.innerHTML = '<strong>✓ Correct!</strong>' + d.explanation;
+  } else {
+    btn.classList.add('wrong-ans');
+    opts[d.correct].classList.add('show-correct');
+    fb.className = 'quiz-feedback wrong-fb';
+    fb.style.display = 'block';
+    fb.innerHTML = '<strong>✗ Not quite.</strong>' + d.explanation;
+  }
+
+  const nextBtn = document.getElementById('quiz-next-btn');
+  nextBtn.style.display = 'block';
+  nextBtn.textContent = currentQ < QUESTIONS.length - 1 ? 'Next question →' : 'See my results →';
+}
+
+function nextQuestion() {
+  const QUESTIONS = QUIZ_DATA[currentArticle];
+  currentQ++;
+  if (currentQ >= QUESTIONS.length) {
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+function getRank(pts) {
+  if (pts >= 214) return 1;
+  if (pts >= 188) return 2;
+  if (pts >= 162) return 3;
+  if (pts >= 130) return 4;
+  if (pts >= 115) return 5;
+  if (pts >= 95)  return 8;
+  if (pts >= 75)  return 11;
+  if (pts >= 60)  return 14;
+  if (pts >= 52)  return 16;
+  if (pts >= 50)  return 17;
+  return 18;
+}
+
+function showResult() {
+  const QUESTIONS = QUIZ_DATA[currentArticle];
+  const pct = Math.round(score / QUESTIONS.length * 100);
+  const passed = score >= 9;
+  const perfect = score === 10;
+
+  // Determine article-specific result text
+  var articleLabel = currentArticle === 3 ? 'Article 3 of 5 complete' : 'Article 4 of 5 complete';
+
+  // Determine points
+  var pts;
+  if (perfect) {
+    pts = 5;
+  } else if (passed) {
+    pts = 3;
+  } else {
+    pts = 1;
+  }
+  if (!quizSubmitted[currentArticle]) {
+    totalPoints += pts;
+    quizSubmitted[currentArticle] = true;
+  }
+
+  // Set score stats
+  document.getElementById('result-score-n').textContent = score;
+  document.getElementById('result-total-n').textContent = QUESTIONS.length;
+  document.getElementById('result-pct').textContent = pct + '%';
+  document.getElementById('result-pct').style.color = passed ? 'var(--green)' : 'var(--red)';
+
+  // Hide all conditional elements first
+  document.getElementById('result-cert-card').style.display = 'none';
+  document.getElementById('result-discount-card').style.display = 'none';
+  document.getElementById('result-retake-prompt').style.display = 'none';
+
+  // Next article number for CTA
+  var nextArticleNum = currentArticle + 1;
+
+  var btnContinue = document.getElementById('btn-continue');
+  var btnRetake = document.getElementById('btn-retake');
+
+  if (perfect) {
+    // 10/10 — heavy confetti
+    document.getElementById('result-confetti').textContent = '🎉 ⭐ 🥉 ⭐ 🎉 ⭐ 🥉 ⭐ 🎉';
+    document.getElementById('result-icon').textContent = '⭐';
+    document.getElementById('result-h').textContent = 'Perfect score!';
+    document.getElementById('result-sub').textContent = 'Perfect score. Keep scoring 10/10 across all five articles to unlock the Bronze discount when you complete the track.';
+    document.getElementById('result-pts').innerHTML = '+' + pts + ' points added to your score <span>· Your total: ' + totalPoints + ' pts · You\'re now ranked #' + getRank(totalPoints) + '</span>';
+    document.getElementById('result-cert-card').style.display = 'flex';
+    document.getElementById('result-cert-sub').textContent = articleLabel + ' · Qualifying for Bronze Track certificate';
+    // Buttons
+    btnContinue.textContent = 'Back to Track →';
+    btnContinue.onclick = function() { showTrack(); };
+    btnRetake.textContent = 'Back to Track';
+    btnRetake.onclick = function() { showTrack(); };
+    // Update nav/track stats
+    document.getElementById('nav-points').textContent = '⚡ ' + totalPoints + ' pts';
+    document.getElementById('complete-count').textContent = currentArticle.toString();
+    document.getElementById('pts-earned').textContent = totalPoints;
+  } else if (passed) {
+    // 9/10 — confetti strip
+    document.getElementById('result-confetti').textContent = '🎉 🥉 ⭐ 🎉 ⭐ 🥉 🎉';
+    document.getElementById('result-icon').textContent = '🏆';
+    document.getElementById('result-h').textContent = 'Certificate earned!';
+    document.getElementById('result-sub').textContent = articleLabel + '. Your Certificate of Excellence in Precious Metals Fundamentals is ready to share on LinkedIn.';
+    document.getElementById('result-pts').innerHTML = '+' + pts + ' points added to your score <span>· Your total: ' + totalPoints + ' pts · You\'re now ranked #' + getRank(totalPoints) + '</span>';
+    document.getElementById('result-cert-card').style.display = 'flex';
+    document.getElementById('result-cert-sub').textContent = articleLabel + ' · Qualifying for Bronze Track certificate';
+    document.getElementById('result-retake-prompt').style.display = 'block';
+    // Buttons
+    btnContinue.textContent = 'Back to Track →';
+    btnContinue.onclick = function() { showTrack(); };
+    btnRetake.textContent = 'Retake for 10/10 →';
+    btnRetake.onclick = function() { showQuiz(); };
+    // Update nav/track stats
+    document.getElementById('nav-points').textContent = '⚡ ' + totalPoints + ' pts';
+    document.getElementById('complete-count').textContent = currentArticle.toString();
+    document.getElementById('pts-earned').textContent = totalPoints;
+  } else {
+    // Fail
+    document.getElementById('result-confetti').textContent = '';
+    document.getElementById('result-icon').textContent = '📖';
+    document.getElementById('result-h').textContent = 'Not quite — try again';
+    document.getElementById('result-sub').textContent = 'You scored ' + score + ' out of 10. You need 9 correct to earn your certificate.';
+    document.getElementById('result-pts').innerHTML = '+' + pts + ' point for attempting <span>· Your total: ' + totalPoints + ' pts · Ranked #' + getRank(totalPoints) + ' · 9/10 needed to pass</span>';
+    // Buttons — default fail state
+    btnContinue.textContent = 'Back to Track →';
+    btnContinue.onclick = function() { showTrack(); };
+    btnRetake.textContent = 'Retake quiz';
+    btnRetake.onclick = function() { showQuiz(); };
+  }
+
+  switchView('view-result');
+}
+
+function votePrediction(btn) {
+  document.querySelectorAll('.pred-btn').forEach(function(b) {
+    b.style.opacity = '0.4';
+    b.style.cursor = 'default';
+  });
+  btn.style.opacity = '1';
+  btn.style.borderColor = 'var(--gold)';
+  btn.style.color = 'var(--gold)';
+  btn.style.background = 'rgba(201,168,76,0.12)';
+  btn.style.cursor = 'default';
+  var note = btn.closest('.prediction-card').querySelector('.prediction-note');
+  note.textContent = '✓ Prediction recorded. We\'ll remind you in 12 months. Academy learners are split: 61% say Outperform, 24% Underperform, 15% Too close to call.';
+  note.style.color = 'var(--gold)';
+}
+
+// Initialise article view with Article 4 content on first load
+showArticle(4);
+// But start on home view
+switchView('view-home');
+</script>
+</body>
+</html>
